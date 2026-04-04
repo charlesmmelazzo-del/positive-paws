@@ -247,7 +247,6 @@ export default function DogProfile() {
   return (
     <div className="page">
       <div className="container">
-        {/* Dog Header */}
         <div className="dog-header">
           <div className="dog-header-avatar">
             {dog.photo_url ? (
@@ -288,7 +287,6 @@ export default function DogProfile() {
           )}
         </div>
 
-        {/* Users Section */}
         {users.length > 0 && (
           <div className="users-section">
             <h3>Trainers</h3>
@@ -302,7 +300,6 @@ export default function DogProfile() {
           </div>
         )}
 
-        {/* Tabs */}
         <div className="tabs">
           <button
             className={`tab ${activeTab === 'stats' ? 'active' : ''}`}
@@ -324,7 +321,6 @@ export default function DogProfile() {
           </button>
         </div>
 
-        {/* Training Stats Tab */}
         {activeTab === 'stats' && (
           <div className="tab-content">
             <h2>Scenario Performance</h2>
@@ -352,7 +348,6 @@ export default function DogProfile() {
           </div>
         )}
 
-        {/* Training Log Tab */}
         {activeTab === 'log' && (
           <div className="tab-content">
             <div className="log-section">
@@ -466,7 +461,6 @@ export default function DogProfile() {
           </div>
         )}
 
-        {/* Milestones Tab */}
         {activeTab === 'milestones' && (
           <div className="tab-content">
             <div className="milestone-section">
@@ -512,14 +506,10 @@ export default function DogProfile() {
         )}
       </div>
 
-      {/* Edit Dog Modal */}
       {showEditModal && (
         <div className="modal-overlay" onClick={() => setShowEditModal(false)}>
           <div className="modal" onClick={e => e.stopPropagation()}>
-            <button
-              className="modal-close"
-              onClick={() => setShowEditModal(false)}
-            >
+            <button className="modal-close" onClick={() => setShowEditModal(false)}>
               ✕
             </button>
             <h2>Edit Dog</h2>
@@ -537,7 +527,6 @@ export default function DogProfile() {
                   required
                 />
               </div>
-
               <div className="form-group">
                 <label htmlFor="edit-breed">Breed</label>
                 <input
@@ -550,7 +539,6 @@ export default function DogProfile() {
                   placeholder="e.g., Golden Retriever"
                 />
               </div>
-
               <div className="form-row">
                 <div className="form-group">
                   <label htmlFor="edit-age">Age (years)</label>
@@ -565,7 +553,6 @@ export default function DogProfile() {
                     min="0"
                   />
                 </div>
-
                 <div className="form-group">
                   <label htmlFor="edit-weight">Weight (lbs)</label>
                   <input
@@ -580,7 +567,6 @@ export default function DogProfile() {
                     step="0.1"
                   />
                 </div>
-
                 <div className="form-group">
                   <label htmlFor="edit-gender">Gender</label>
                   <select
@@ -596,7 +582,6 @@ export default function DogProfile() {
                   </select>
                 </div>
               </div>
-
               <div className="form-group">
                 <label htmlFor="edit-photo_url">Photo URL</label>
                 <input
@@ -609,7 +594,6 @@ export default function DogProfile() {
                   placeholder="https://example.com/dog.jpg"
                 />
               </div>
-
               <div className="form-group">
                 <label htmlFor="edit-bio">Bio / Notes</label>
                 <textarea
@@ -622,13 +606,8 @@ export default function DogProfile() {
                   rows="4"
                 ></textarea>
               </div>
-
               <div className="modal-actions">
-                <button
-                  type="button"
-                  className="btn btn-ghost"
-                  onClick={() => setShowEditModal(false)}
-                >
+                <button type="button" className="btn btn-ghost" onClick={() => setShowEditModal(false)}>
                   Cancel
                 </button>
                 <button type="submit" className="btn btn-primary">
@@ -640,14 +619,10 @@ export default function DogProfile() {
         </div>
       )}
 
-      {/* Add Milestone Modal */}
       {showAddMilestoneModal && (
         <div className="modal-overlay" onClick={() => setShowAddMilestoneModal(false)}>
           <div className="modal" onClick={e => e.stopPropagation()}>
-            <button
-              className="modal-close"
-              onClick={() => setShowAddMilestoneModal(false)}
-            >
+            <button className="modal-close" onClick={() => setShowAddMilestoneModal(false)}>
               ✕
             </button>
             <h2>Add Milestone</h2>
@@ -665,7 +640,6 @@ export default function DogProfile() {
                   required
                 />
               </div>
-
               <div className="form-group">
                 <label htmlFor="milestone-type">Type</label>
                 <select
@@ -681,7 +655,6 @@ export default function DogProfile() {
                   <option value="other">Other</option>
                 </select>
               </div>
-
               <div className="form-group">
                 <label htmlFor="milestone-notes">Notes</label>
                 <textarea
@@ -694,13 +667,8 @@ export default function DogProfile() {
                   rows="3"
                 ></textarea>
               </div>
-
               <div className="modal-actions">
-                <button
-                  type="button"
-                  className="btn btn-ghost"
-                  onClick={() => setShowAddMilestoneModal(false)}
-                >
+                <button type="button" className="btn btn-ghost" onClick={() => setShowAddMilestoneModal(false)}>
                   Cancel
                 </button>
                 <button type="submit" className="btn btn-primary">
