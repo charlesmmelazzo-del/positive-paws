@@ -65,15 +65,11 @@ export default function ScenarioDetail() {
         behavior_tags: tags
       });
 
-      setSubmitMessage({
-        type: 'success',
-        text: '✓ Training session logged successfully!'
-      });
+      setSubmitMessage({ type: 'success', text: '✓ Training session logged! Great work.' });
       setNotes('');
       setBehaviorTags('');
       setSuccessRating(0);
-
-      setTimeout(() => setSubmitMessage(null), 3000);
+      setTimeout(() => setSubmitMessage(null), 4000);
     } catch (err) {
       setSubmitMessage({
         type: 'error',
@@ -102,7 +98,7 @@ export default function ScenarioDetail() {
         <div className="container">
           <div className="alert alert-error">{error}</div>
           <button onClick={() => navigate('/scenarios')} className="btn btn-secondary">
-            ← Back to Scenarios
+            ← Back to Activities
           </button>
         </div>
       </div>
@@ -120,16 +116,9 @@ export default function ScenarioDetail() {
   }
 
   const colorMap = {
-    orange: '#FFE8DF',
-    yellow: '#FEF9C3',
-    green: '#DCFCE7',
-    pink: '#FCE7F3',
-    blue: '#DBEAFE',
-    purple: '#F3E8FF',
-    red: '#FEE2E2',
-    teal: '#CCFBF1',
-    indigo: '#E0E7FF',
-    cyan: '#CFFAFE'
+    orange: '#FFE8DF', yellow: '#FEF9C3', green: '#DCFCE7', pink: '#FCE7F3',
+    blue: '#DBEAFE', purple: '#F3E8FF', red: '#FEE2E2', teal: '#CCFBF1',
+    indigo: '#E0E7FF', cyan: '#CFFAFE'
   };
 
   const tipsByType = {
@@ -139,170 +128,112 @@ export default function ScenarioDetail() {
     reward: scenario.tips?.filter(t => t.type === 'reward') || []
   };
 
+  const hasTips = tipsByType.do.length + tipsByType.dont.length + tipsByType.why.length + tipsByType.reward.length > 0;
+  const ratingLabels = ['', 'Needs work', 'Getting there', 'Good', 'Great', 'Excellent!'];
+
+  const TipSection = ({ tips, color, bg, border, label }) => {
+    if (!tips.length) return null;
+    return (
+      <div style={{ marginBottom: '1.5rem' }}>
+        <div style={{
+          display: 'inline-block', marginBottom: '12px', padding: '6px 16px',
+          background: color, borderRadius: '8px'
+        }}>
+          <span style={{ color: 'white', fontWeight: '700', fontSize: '13px', letterSpacing: '0.5px' }}>
+            {label}
+          </span>
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+          {tips.map((tip, i) => (
+            <div key={tip.id} style={{
+              display: 'flex', gap: '12px', alignItems: 'flex-start',
+              padding: '16px 20px', background: bg,
+              border: `1px solid ${border}`, borderLeft: `4px solid ${color}`,
+              borderRadius: '8px'
+            }}>
+              <span style={{
+                width: '24px', height: '24px', borderRadius: '50%', background: color,
+                color: 'white', fontSize: '12px', fontWeight: '700',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                flexShrink: 0, marginTop: '1px'
+              }}>{i + 1}</span>
+              <div>
+                {tip.tip_title && (
+                  <p style={{ fontWeight: '700', margin: '0 0 4px 0', fontSize: '15px' }}>
+                    {tip.tip_title}
+                  </p>
+                )}
+                <p style={{ margin: 0, lineHeight: '1.6', fontSize: '14px' }}>
+                  {tip.tip_text}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="page">
-      <div className="container">
-        {/* Back Button */}
+      <div className="container" style={{ maxWidth: '780px' }}>
+
         <button
           onClick={() => navigate('/scenarios')}
           className="btn btn-outline btn-sm"
           style={{ marginBottom: '1.5rem' }}
         >
-          ← Back to Scenarios
+          ← Back to Activities
         </button>
 
-        {/* Scenario Header */}
+        {/* Header */}
         <div style={{
-          display: 'flex',
-          gap: '2rem',
-          alignItems: 'flex-start',
-          marginBottom: '3rem',
-          padding: '2rem',
-          backgroundColor: 'white',
-          borderRadius: 'var(--radius)',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.05)'
+          display: 'flex', gap: '1.5rem', alignItems: 'flex-start',
+          marginBottom: '2.5rem', padding: '2rem',
+          backgroundColor: colorMap[scenario.color] || '#EFF6FF',
+          borderRadius: 'var(--radius)', border: '1px solid rgba(0,0,0,0.06)'
         }}>
           <div style={{
-            width: '120px',
-            height: '120px',
-            backgroundColor: colorMap[scenario.color] || colorMap.blue,
-            borderRadius: 'var(--radius-sm)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: '3.5rem',
-            flexShrink: 0
+            width: '100px', height: '100px', backgroundColor: 'white',
+            borderRadius: '16px', display: 'flex', alignItems: 'center',
+            justifyContent: 'center', fontSize: '3.5rem', flexShrink: 0,
+            boxShadow: '0 2px 8px rgba(0,0,0,0.08)'
           }}>
             {scenario.icon}
           </div>
           <div>
-            <h1 style={{ marginTop: 0, marginBottom: '0.5rem' }}>
+            <h1 style={{ marginTop: 0, marginBottom: '0.5rem', fontSize: '28px' }}>
               {scenario.name}
             </h1>
-            <p style={{ color: 'var(--text-muted)', lineHeight: '1.6' }}>
+            <p style={{ color: 'var(--text-muted)', lineHeight: '1.6', margin: 0, fontSize: '16px' }}>
               {scenario.description}
             </p>
           </div>
         </div>
 
-        {/* Tips Sections */}
-        <div style={{ marginBottom: '3rem' }}>
-          {/* DO Section */}
-          {tipsByType.do.length > 0 && (
-            <div style={{ marginBottom: '2rem' }}>
-              <h2 style={{ color: '#15803D', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                ✅ DO
-              </h2>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                {tipsByType.do.map(tip => (
-                  <div
-                    key={tip.id}
-                    className="card"
-                    style={{
-                      borderLeft: '4px solid #15803D',
-                      backgroundColor: '#F0FDF4'
-                    }}
-                  >
-                    <p style={{ fontWeight: '600', marginTop: 0, marginBottom: '0.5rem' }}>
-                      {tip.tip_title}
-                    </p>
-                    <p style={{ marginBottom: 0, color: 'var(--text)' }}>
-                      {tip.tip_text}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
+        {/* Tips */}
+        {hasTips && (
+          <div style={{ marginBottom: '3rem' }}>
+            <h2 style={{ fontSize: '22px', fontWeight: '700', marginBottom: '1.5rem' }}>
+              💡 Training Tips
+            </h2>
+            <TipSection tips={tipsByType.do} color="#15803D" bg="#F0FDF4" border="#BBF7D0" label="✅ WHAT TO DO" />
+            <TipSection tips={tipsByType.dont} color="#B91C1C" bg="#FEF2F2" border="#FECACA" label="❌ WHAT TO AVOID" />
+            <TipSection tips={tipsByType.why} color="#0369A1" bg="#F0F9FF" border="#BAE6FD" label="🧠 WHY IT WORKS" />
+            <TipSection tips={tipsByType.reward} color="#B45309" bg="#FFFBEB" border="#FDE68A" label="🎁 REWARD STRATEGY" />
+          </div>
+        )}
 
-          {/* DON'T Section */}
-          {tipsByType.dont.length > 0 && (
-            <div style={{ marginBottom: '2rem' }}>
-              <h2 style={{ color: '#B91C1C', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                ❌ DON'T
-              </h2>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                {tipsByType.dont.map(tip => (
-                  <div
-                    key={tip.id}
-                    className="card"
-                    style={{
-                      borderLeft: '4px solid #B91C1C',
-                      backgroundColor: '#FEF2F2'
-                    }}
-                  >
-                    <p style={{ fontWeight: '600', marginTop: 0, marginBottom: '0.5rem' }}>
-                      {tip.tip_title}
-                    </p>
-                    <p style={{ marginBottom: 0, color: 'var(--text)' }}>
-                      {tip.tip_text}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
+        <div style={{ borderTop: '2px solid var(--border)', marginBottom: '2.5rem' }}></div>
 
-          {/* WHY IT WORKS Section */}
-          {tipsByType.why.length > 0 && (
-            <div style={{ marginBottom: '2rem' }}>
-              <h2 style={{ color: '#0369A1', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                🤔 WHY IT WORKS
-              </h2>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                {tipsByType.why.map(tip => (
-                  <div
-                    key={tip.id}
-                    className="card"
-                    style={{
-                      borderLeft: '4px solid #0369A1',
-                      backgroundColor: '#F0F9FF'
-                    }}
-                  >
-                    <p style={{ fontWeight: '600', marginTop: 0, marginBottom: '0.5rem' }}>
-                      {tip.tip_title}
-                    </p>
-                    <p style={{ marginBottom: 0, color: 'var(--text)' }}>
-                      {tip.tip_text}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* REWARD TIPS Section */}
-          {tipsByType.reward.length > 0 && (
-            <div style={{ marginBottom: '2rem' }}>
-              <h2 style={{ color: '#C2410C', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                🎁 REWARD TIPS
-              </h2>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                {tipsByType.reward.map(tip => (
-                  <div
-                    key={tip.id}
-                    className="card"
-                    style={{
-                      borderLeft: '4px solid #C2410C',
-                      backgroundColor: '#FEF3C7'
-                    }}
-                  >
-                    <p style={{ fontWeight: '600', marginTop: 0, marginBottom: '0.5rem' }}>
-                      {tip.tip_title}
-                    </p>
-                    <p style={{ marginBottom: 0, color: 'var(--text)' }}>
-                      {tip.tip_text}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Log Training Session Form */}
-        <div className="card" style={{ marginBottom: '2rem' }}>
-          <h2 style={{ marginTop: 0 }}>📊 Log a Training Session</h2>
+        {/* Log Session Form */}
+        <div className="card" style={{ marginBottom: '2rem', padding: '2rem' }}>
+          <h2 style={{ marginTop: 0, marginBottom: '6px', fontSize: '22px' }}>
+            📋 Log This Session
+          </h2>
+          <p style={{ color: 'var(--text-muted)', fontSize: '14px', marginBottom: '1.5rem' }}>
+            Record how training went so you can track progress over time.
+          </p>
 
           {submitMessage && (
             <div className={`alert ${submitMessage.type === 'success' ? 'alert-success' : 'alert-error'}`}
@@ -312,14 +243,13 @@ export default function ScenarioDetail() {
           )}
 
           <form onSubmit={handleSubmitLog}>
-            {/* Dog Selection */}
             <div className="input-group" style={{ marginBottom: '1.5rem' }}>
               <label htmlFor="dog-select" style={{ display: 'block', fontWeight: '600', marginBottom: '0.5rem' }}>
-                Select Your Dog
+                Which dog? *
               </label>
               {dogs.length === 0 ? (
                 <p style={{ color: 'var(--text-muted)' }}>
-                  No dogs found. Add a dog to your profile first.
+                  No dogs found. <a href="/dogs" style={{ color: 'var(--primary)' }}>Add a dog first</a>.
                 </p>
               ) : (
                 <select
@@ -332,67 +262,58 @@ export default function ScenarioDetail() {
                   <option value="">Select a dog...</option>
                   {dogs.map(dog => (
                     <option key={dog.id} value={dog.id}>
-                      {dog.name} ({dog.breed})
+                      {dog.name}{dog.breed ? ` (${dog.breed})` : ''}
                     </option>
                   ))}
                 </select>
               )}
             </div>
 
-            {/* Success Rating */}
             <div className="input-group" style={{ marginBottom: '1.5rem' }}>
               <label style={{ display: 'block', fontWeight: '600', marginBottom: '0.5rem' }}>
-                Success Rating
+                How did it go? *
               </label>
-              <div style={{ display: 'flex', gap: '0.5rem' }}>
+              <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
                 {[1, 2, 3, 4, 5].map(rating => (
                   <button
                     key={rating}
                     type="button"
                     onClick={() => setSuccessRating(rating)}
                     style={{
-                      fontSize: '2rem',
-                      backgroundColor: 'transparent',
-                      border: 'none',
-                      cursor: 'pointer',
-                      opacity: rating <= successRating ? 1 : 0.3,
-                      transition: 'opacity 0.2s'
+                      fontSize: '2rem', backgroundColor: 'transparent', border: 'none',
+                      cursor: 'pointer', opacity: rating <= successRating ? 1 : 0.25,
+                      transform: rating <= successRating ? 'scale(1.1)' : 'scale(1)',
+                      transition: 'all 0.15s'
                     }}
                   >
                     ⭐
                   </button>
                 ))}
+                {successRating > 0 && (
+                  <span style={{ marginLeft: '8px', color: 'var(--text-muted)', fontSize: '14px', fontWeight: '600' }}>
+                    {ratingLabels[successRating]}
+                  </span>
+                )}
               </div>
-              {successRating > 0 && (
-                <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
-                  {successRating === 1 && 'Needs improvement'}
-                  {successRating === 2 && 'Fair'}
-                  {successRating === 3 && 'Good'}
-                  {successRating === 4 && 'Great'}
-                  {successRating === 5 && 'Excellent!'}
-                </p>
-              )}
             </div>
 
-            {/* Notes */}
             <div className="input-group" style={{ marginBottom: '1.5rem' }}>
               <label htmlFor="notes" style={{ display: 'block', fontWeight: '600', marginBottom: '0.5rem' }}>
-                Notes (optional)
+                Notes <span style={{ color: 'var(--text-muted)', fontWeight: '400' }}>(optional)</span>
               </label>
               <textarea
                 id="notes"
                 className="input"
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
-                placeholder="How did the session go? Any observations?"
-                style={{ width: '100%', minHeight: '100px', fontFamily: 'inherit' }}
+                placeholder="What went well? What needs more work?"
+                style={{ width: '100%', minHeight: '90px', fontFamily: 'inherit', boxSizing: 'border-box' }}
               />
             </div>
 
-            {/* Behavior Tags */}
             <div className="input-group" style={{ marginBottom: '1.5rem' }}>
               <label htmlFor="tags" style={{ display: 'block', fontWeight: '600', marginBottom: '0.5rem' }}>
-                Behavior Tags (comma-separated, optional)
+                Behavior tags <span style={{ color: 'var(--text-muted)', fontWeight: '400' }}>(optional, comma-separated)</span>
               </label>
               <input
                 id="tags"
@@ -400,24 +321,22 @@ export default function ScenarioDetail() {
                 className="input"
                 value={behaviorTags}
                 onChange={(e) => setBehaviorTags(e.target.value)}
-                placeholder="e.g., jumping, pulling, focus, heel"
-                style={{ width: '100%' }}
+                placeholder="e.g., jumping, pulling, focused, calm"
+                style={{ width: '100%', boxSizing: 'border-box' }}
               />
-              <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginTop: '0.5rem' }}>
-                Enter tags separated by commas to track specific behaviors
-              </p>
             </div>
 
-            {/* Submit Button */}
             <button
               type="submit"
               className="btn btn-primary"
               disabled={submitting || !selectedDogId || successRating === 0}
+              style={{ minWidth: '180px' }}
             >
-              {submitting ? 'Logging...' : 'Log Training Session'}
+              {submitting ? 'Saving...' : '✓ Log Training Session'}
             </button>
           </form>
         </div>
+
       </div>
     </div>
   );
