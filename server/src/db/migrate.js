@@ -193,11 +193,52 @@ const migrate = async () => {
       );
     `);
 
+    // âââ Deduplicate courses and add UNIQUE constraints âââââââââââââââââââââââ
+    // Remove duplicate courses (keep lowest id per title+book_source)
+    await client.query(`
+      DELETE FROM courses WHERE id NOT IN (
+        SELECT MIN(id) FROM courses GROUP BY title, book_source
+      )
+    `);
+    await client.query(`
+      ALTER TABLE courses ADD CONSTRAINT IF NOT EXISTS courses_title_booksource_key UNIQUE (title, book_source)
+    `);
+
+    // Remove duplicate lessons (cascade from course dedup may have already cleaned some)
+    await client.query(`
+      DELETE FROM lessons WHERE id NOT	IN (
+        SELECT MIN(id) FROM lessons GROUP BY course_id, title
+      )
+    `);
+    await client.query(`
+      ALTER TABLE lessons ADD CONSTRAINT IF NOT EXISTS lessons_course_title_key UNIQUE (course_id, title)
+    `);
+
+    // Remove duplicate quizzes (one per lesson)
+    await client.query(`
+      DELETE FROM quizzes WHERE id NOT IN (
+        SELECT MIN(id) FROM quizzes GROUP BY lesson_id
+      )
+    `);
+    await client.query(`
+      ALTER TABLE quizzes ADD CONSTRAINT IF NOT EXISTS quizzes_lesson_id_key UNIQUE (lesson_id)
+    `);
+
+    // Remove duplicate quiz questions (one per quiz+order_index)
+    await client.query(`
+      DELETE FROM quiz_questions WHERE id NOT IN (
+        SELECT MIN(id) FROM quiz_questions GROUP BY quiz_id, order_index
+      )
+    `);
+    await client.query(`
+      ALTER TABLE quiz_questions ADD CONSTRAINT IF NOT EXISTS quiz_questions_quiz_order_key UNIQUE (quiz_id, order_index)
+    `);
+
     await client.query('COMMIT');
-    console.log('✅ Database migration completed successfully!');
+    console.log('â Database migration completed successfully!');
   } catch (err) {
     await client.query('ROLLBACK');
-    console.error('❌ Migration failed:', err);
+    console.error('â Migration failed:', err);
     throw err;
   } finally {
     client.release();
