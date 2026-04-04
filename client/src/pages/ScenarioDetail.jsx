@@ -212,6 +212,49 @@ export default function ScenarioDetail() {
         </div>
 
         {/* Tips */}
+        {/* Training Guide */}
+        {scenario.guide && (
+          <div style={{ marginBottom: '3rem' }}>
+            <h2 style={{ fontSize: '22px', fontWeight: '700', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              ð Training Guide
+            </h2>
+            <div style={{
+              background: 'linear-gradient(135deg, #F8F7FF 0%, #F0F9FF 100%)',
+              border: '1px solid #DDD6FE',
+              borderLeft: '4px solid #7C3AED',
+              borderRadius: '12px',
+              padding: '1.5rem 2rem',
+            }}>
+              <p style={{ fontSize: '12px', fontWeight: '600', color: '#7C3AED', textTransform: 'uppercase', letterSpacing: '0.05em', marginTop: 0, marginBottom: '1rem' }}>
+                Expert-backed techniques from professional trainers
+              </p>
+              <ul style={{ margin: 0, padding: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                {scenario.guide.split('\n').filter(line => line.trim()).map((line, i) => (
+                  <li key={i} style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+                    <span style={{
+                      width: '22px',
+                      height: '22px',
+                      borderRadius: '50%',
+                      background: '#7C3AED',
+                      color: 'white',
+                      fontSize: '11px',
+                      fontWeight: '700',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexShrink: 0,
+                      marginTop: '2px'
+                    }}>{i + 1}</span>
+                    <span style={{ color: '#1E1B4B', lineHeight: '1.65', fontSize: '14.5px' }}>
+                      {line.replace(/^â¢\s*/, '')}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        )}
+
         {hasTips && (
           <div style={{ marginBottom: '3rem' }}>
             <h2 style={{ fontSize: '22px', fontWeight: '700', marginBottom: '1.5rem' }}>
