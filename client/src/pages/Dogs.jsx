@@ -33,7 +33,7 @@ export default function Dogs() {
     try {
       setLoading(true);
       setError(null);
-      const response = await api.get('/api/dogs/my');
+      const response = await api.get('/dogs/my');
       setDogs(response.data);
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to load dogs');
@@ -45,7 +45,7 @@ export default function Dogs() {
 
   const fetchAllDogs = async () => {
     try {
-      const response = await api.get('/api/dogs');
+      const response = await api.get('/dogs');
       setAllDogs(response.data);
     } catch (err) {
       console.error('Error fetching all dogs:', err);
@@ -80,11 +80,11 @@ export default function Dogs() {
     }
 
     try {
-      await api.post('/api/dogs', {
+      await api.post('/dogs', {
         name: addFormData.name,
         breed: addFormData.breed || null,
-        age: addFormData.age ? parseInt(addFormData.age) : null,
-        weight: addFormData.weight ? parseFloat(addFormData.weight) : null,
+        age_years: addFormData.age ? parseInt(addFormData.age) : null,
+        weight_lbs: addFormData.weight ? parseFloat(addFormData.weight) : null,
         gender: addFormData.gender,
         photo_url: addFormData.photo_url || null,
         bio: addFormData.bio || null
@@ -101,7 +101,7 @@ export default function Dogs() {
 
   const handleConnectDog = async (dogId) => {
     try {
-      await api.post(`/api/dogs/${dogId}/connect`);
+      await api.post(`/dogs/${dogId}/connect`);
       setSuccessMessage('Dog connected to your profile!');
       setTimeout(() => setSuccessMessage(''), 3000);
       setShowFindModal(false);
@@ -182,7 +182,7 @@ export default function Dogs() {
                     <h3>{dog.name}</h3>
                     {dog.breed && <p className="breed">{dog.breed}</p>}
                     <div className="dog-meta">
-                      {dog.age && <span>Age: {dog.age}</span>}
+                      {dog.age_years && <span>Age: {dog.age_years}</span>}
                       {dog.gender && <span>Gender: {dog.gender}</span>}
                     </div>
                   </div>
