@@ -147,6 +147,11 @@ const migrate = async () => {
       );
     `);
 
+    // Add guide column to scenarios if it doesn't exist
+    await client.query(`
+      ALTER TABLE scenarios ADD COLUMN IF NOT EXISTS guide TEXT;
+    `);
+
     // Scenario tips table
     await client.query(`
       CREATE TABLE IF NOT EXISTS scenario_tips (
