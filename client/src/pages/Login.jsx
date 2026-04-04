@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import api from '../utils/api';
 import '../styles/index.css';
 
 const Login = () => {
@@ -18,26 +17,16 @@ const Login = () => {
     setLoading(true);
 
     try {
-      // Validate inputs
       if (!email || !password) {
         setError('Please fill in all fields');
         setLoading(false);
         return;
       }
 
-      // Call API to login
-      const response = await api.post('/auth/login', {
-        email,
-        password,
-      });
-
-      // Update auth context
-      if (response.data && response.data.token) {
-        login(response.data.user, response.data.token);
-        navigate('/dashboard');
-      }
+      await login(email, password);
+      navigate('/dashboard');
     } catch (err) {
-      const errorMessage = err.response?.data?.message || 'Login failed. Please try again.';
+      const errorMessage = err.response?.data?.error || err.response?.data?.message || 'Login failed. Please check your email and password.';
       setError(errorMessage);
     } finally {
       setLoading(false);
