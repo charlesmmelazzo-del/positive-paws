@@ -11,8 +11,8 @@ const seed = async () => {
     const passwordHash = await bcrypt.hash('PositivePaws2024!', 12);
     await client.query(`
       INSERT INTO users (name, email, password_hash, role, bio)
-      VALUES ('Mike', 'Mikemelazzo@me.com', $1, 'admin', 'Positive Paws founder and head trainer.')
-      ON CONFLICT (email) DO NOTHING
+      VALUES ('Mike', 'mikemelazzo@me.com', $1, 'admin', 'Positive Paws founder and head trainer.')
+      ON CONFLICT (email) DO UPDATE SET password_hash = EXCLUDED.password_hash, role = EXCLUDED.role
     `, [passwordHash]);
     console.log('✅ Admin user seeded');
 
