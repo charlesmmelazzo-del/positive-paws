@@ -65,7 +65,14 @@ const seed = async () => {
       const res = await client.query(`
         INSERT INTO courses (title, description, book_source, author, difficulty, thumbnail_emoji, color, order_index)
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-        ON CONFLICT DO NOTHING RETURNING id
+        ON CONFLICT (title, book_source) DO UPDATE SET
+          description = EXCLUDED.description,
+          author = EXCLUDED.author,
+          difficulty = EXCLUDED.difficulty,
+          thumbnail_emoji = EXCLUDED.thumbnail_emoji,
+          color = EXCLUDED.color,
+          order_index = EXCLUDED.order_index
+        RETURNING id
       `, [course.title, course.description, course.book_source, course.author, course.difficulty, course.thumbnail_emoji, course.color, course.order_index]);
       if (res.rows[0]) courseIds.push(res.rows[0].id);
     }
@@ -272,12 +279,20 @@ The key variables in effective training:
     for (const lesson of course1Lessons) {
       const res = await client.query(`
         INSERT INTO lessons (course_id, title, content, key_takeaway, order_index, reading_time_minutes)
-        VALUES ($1, $2, $3, $4, $5, $6) RETURNING id
+        VALUES ($1, $2, $3, $4, $5, $6)
+        ON CONFLICT (course_id, title) DO UPDATE SET
+          content = EXCLUDED.content,
+          key_takeaway = EXCLUDED.key_takeaway,
+          order_index = EXCLUDED.order_index,
+          reading_time_minutes = EXCLUDED.reading_time_minutes
+        RETURNING id
       `, [c1, lesson.title, lesson.content, lesson.key_takeaway, lesson.order_index, lesson.reading_time_minutes]);
 
       // Create quiz for each lesson
       const quizRes = await client.query(`
-        INSERT INTO quizzes (lesson_id, title, passing_score) VALUES ($1, $2, 70) RETURNING id
+        INSERT INTO quizzes (lesson_id, title, passing_score) VALUES ($1, $2, 70)
+        ON CONFLICT (lesson_id) DO UPDATE SET title = EXCLUDED.title
+        RETURNING id
       `, [res.rows[0].id, `Quiz: ${lesson.title}`]);
     }
 
@@ -324,6 +339,11 @@ The key variables in effective training:
         await client.query(`
           INSERT INTO quiz_questions (quiz_id, question, options, correct_answer, explanation, order_index)
           VALUES ($1, $2, $3, $4, $5, $6)
+          ON CONFLICT (quiz_id, order_index) DO UPDATE SET
+            question = EXCLUDED.question,
+            options = EXCLUDED.options,
+            correct_answer = EXCLUDED.correct_answer,
+            explanation = EXCLUDED.explanation
         `, [quizId, q.question, JSON.stringify(q.options), q.correct, q.explanation, j]);
       }
     }
@@ -502,10 +522,17 @@ Learning takes time and repetition. A behavior learned in the living room will n
     for (const lesson of course2Lessons) {
       const res = await client.query(`
         INSERT INTO lessons (course_id, title, content, key_takeaway, order_index, reading_time_minutes)
-        VALUES ($1, $2, $3, $4, $5, $6) RETURNING id
+        VALUES ($1, $2, $3, $4, $5, $6)
+        ON CONFLICT (course_id, title) DO UPDATE SET
+          content = EXCLUDED.content,
+          key_takeaway = EXCLUDED.key_takeaway,
+          order_index = EXCLUDED.order_index,
+          reading_time_minutes = EXCLUDED.reading_time_minutes
+        RETURNING id
       `, [c2, lesson.title, lesson.content, lesson.key_takeaway, lesson.order_index, lesson.reading_time_minutes]);
       await client.query(`
         INSERT INTO quizzes (lesson_id, title, passing_score) VALUES ($1, $2, 70)
+        ON CONFLICT (lesson_id) DO UPDATE SET title = EXCLUDED.title
       `, [res.rows[0].id, `Quiz: ${lesson.title}`]);
     }
 
@@ -540,6 +567,11 @@ Learning takes time and repetition. A behavior learned in the living room will n
         await client.query(`
           INSERT INTO quiz_questions (quiz_id, question, options, correct_answer, explanation, order_index)
           VALUES ($1, $2, $3, $4, $5, $6)
+          ON CONFLICT (quiz_id, order_index) DO UPDATE SET
+            question = EXCLUDED.question,
+            options = EXCLUDED.options,
+            correct_answer = EXCLUDED.correct_answer,
+            explanation = EXCLUDED.explanation
         `, [quizId, q.question, JSON.stringify(q.options), q.correct, q.explanation, j]);
       }
     }
@@ -740,10 +772,17 @@ You don't need to train every step of every walk. But dedicated 5-10 minute trai
     for (const lesson of course3Lessons) {
       const res = await client.query(`
         INSERT INTO lessons (course_id, title, content, key_takeaway, order_index, reading_time_minutes)
-        VALUES ($1, $2, $3, $4, $5, $6) RETURNING id
+        VALUES ($1, $2, $3, $4, $5, $6)
+        ON CONFLICT (course_id, title) DO UPDATE SET
+          content = EXCLUDED.content,
+          key_takeaway = EXCLUDED.key_takeaway,
+          order_index = EXCLUDED.order_index,
+          reading_time_minutes = EXCLUDED.reading_time_minutes
+        RETURNING id
       `, [c3, lesson.title, lesson.content, lesson.key_takeaway, lesson.order_index, lesson.reading_time_minutes]);
       await client.query(`
         INSERT INTO quizzes (lesson_id, title, passing_score) VALUES ($1, $2, 70)
+        ON CONFLICT (lesson_id) DO UPDATE SET title = EXCLUDED.title
       `, [res.rows[0].id, `Quiz: ${lesson.title}`]);
     }
 
@@ -778,6 +817,11 @@ You don't need to train every step of every walk. But dedicated 5-10 minute trai
         await client.query(`
           INSERT INTO quiz_questions (quiz_id, question, options, correct_answer, explanation, order_index)
           VALUES ($1, $2, $3, $4, $5, $6)
+          ON CONFLICT (quiz_id, order_index) DO UPDATE SET
+            question = EXCLUDED.question,
+            options = EXCLUDED.options,
+            correct_answer = EXCLUDED.correct_answer,
+            explanation = EXCLUDED.explanation
         `, [quizId, q.question, JSON.stringify(q.options), q.correct, q.explanation, j]);
       }
     }
