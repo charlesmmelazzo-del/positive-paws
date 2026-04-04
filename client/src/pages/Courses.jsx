@@ -24,7 +24,7 @@ export default function Courses() {
     try {
       setLoading(true);
       setError(null);
-      const response = await api.get('/api/courses');
+      const response = await api.get('/courses');
       setCourses(response.data);
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to load courses');
