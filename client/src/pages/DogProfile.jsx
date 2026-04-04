@@ -71,22 +71,22 @@ export default function DogProfile() {
     try {
       setLoading(true);
       setError(null);
-      const response = await api.get(`/api/dogs/${id}`);
-      setDog(response.data.dog);
-      setUsers(response.data.users || []);
-      setScenarioStats(response.data.scenario_stats || []);
-      setRecentLogs(response.data.recent_logs || []);
-      setMilestones(response.data.milestones || []);
+      const response = await api.get(`/dogs/${id}`);
+      const data = response.data;
+      setDog(data);
+      setUsers(data.users || []);
+      setScenarioStats(data.scenario_stats || []);
+      setRecentLogs(data.recent_logs || []);
+      setMilestones(data.milestones || []);
 
-      // Set edit form with current dog data
       setEditFormData({
-        name: response.data.dog.name,
-        breed: response.data.dog.breed || '',
-        age: response.data.dog.age?.toString() || '',
-        weight: response.data.dog.weight?.toString() || '',
-        gender: response.data.dog.gender || 'unknown',
-        photo_url: response.data.dog.photo_url || '',
-        bio: response.data.dog.bio || ''
+        name: data.name,
+        breed: data.breed || '',
+        age: data.age_years?.toString() || '',
+        weight: data.weight_lbs?.toString() || '',
+        gender: data.gender || 'unknown',
+        photo_url: data.photo_url || '',
+        bio: data.bio || ''
       });
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to load dog profile');
@@ -98,7 +98,7 @@ export default function DogProfile() {
 
   const fetchScenarios = async () => {
     try {
-      const response = await api.get('/api/scenarios');
+      const response = await api.get('/scenarios');
       setScenarios(response.data);
       if (response.data.length > 0) {
         setLogFormData(prev => ({
@@ -119,7 +119,7 @@ export default function DogProfile() {
     }
 
     try {
-      await api.post(`/api/dogs/${id}/logs`, {
+      await api.post(`/dogs/${id}/logs`, {
         scenario_id: parseInt(logFormData.scenario_id),
         success_rating: logFormData.success_rating,
         notes: logFormData.notes || null,
@@ -148,11 +148,11 @@ export default function DogProfile() {
     }
 
     try {
-      await api.put(`/api/dogs/${id}`, {
+      await api.put(`/dogs/${id}`, {
         name: editFormData.name,
         breed: editFormData.breed || null,
-        age: editFormData.age ? parseInt(editFormData.age) : null,
-        weight: editFormData.weight ? parseFloat(editFormData.weight) : null,
+        age_years: editFormData.age ? parseInt(editFormData.age) : null,
+        weight_lbs: editFormData.weight ? parseFloat(editFormData.weight) : null,
         gender: editFormData.gender,
         photo_url: editFormData.photo_url || null,
         bio: editFormData.bio || null
@@ -174,9 +174,9 @@ export default function DogProfile() {
     }
 
     try {
-      await api.post(`/api/dogs/${id}/milestones`, {
-        name: milestoneFormData.name,
-        type: milestoneFormData.type,
+      await api.post(`/dogs/${id}/milestones`, {
+        milestone_name: milestoneFormData.name,
+        milestone_type: milestoneFormData.type,
         notes: milestoneFormData.notes || null
       });
 
@@ -261,8 +261,8 @@ export default function DogProfile() {
             <h1>{dog.name}</h1>
             <div className="dog-details">
               {dog.breed && <span>{dog.breed}</span>}
-              {dog.age && <span>Age: {dog.age}</span>}
-              {dog.weight && <span>Weight: {dog.weight} lbs</span>}
+              {dog.age_years && <span>Age: {dog.age_years}</span>}
+              {dog.weight_lbs && <span>Weight: {dog.weight_lbs} lbs</span>}
               {dog.gender && <span>Gender: {dog.gender}</span>}
             </div>
           </div>
@@ -335,8 +335,8 @@ export default function DogProfile() {
             ) : (
               <div className="grid-3">
                 {scenarioStats.map(stat => (
-                  <div key={stat.scenario_id} className="card">
-                    <h3>{stat.scenario_name}</h3>
+                  <div key={stat.id} className="card">
+                    <h3>{stat.name}</h3>
                     <div className="stat-item">
                       <span className="stat-label">Average Rating:</span>
                       <RatingStars rating={Math.round(stat.avg_rating || 0)} />
@@ -439,7 +439,7 @@ export default function DogProfile() {
                       <div className="log-header">
                         <h4>{log.scenario_name}</h4>
                         <span className="log-date">
-                          {new Date(log.created_at).toLocaleDateString()}
+                          {new Date(log.logged_at).toLocaleDateString()}
                         </span>
                       </div>
                       <div className="log-rating">
@@ -492,13 +492,13 @@ export default function DogProfile() {
                   {milestones.map(milestone => (
                     <div key={milestone.id} className="milestone-item card">
                       <div className="milestone-header">
-                        <h4>{milestone.name}</h4>
+                        <h4>{milestone.milestone_name}</h4>
                         <span className="milestone-type badge badge-orange">
-                          {milestone.type}
+                          {milestone.milestone_type}
                         </span>
                       </div>
                       <p className="milestone-date">
-                        Achieved on {new Date(milestone.achieved_date).toLocaleDateString()}
+                        Achieved on {new Date(milestone.achieved_at).toLocaleDateString()}
                       </p>
                       {milestone.notes && (
                         <p className="milestone-notes">{milestone.notes}</p>
