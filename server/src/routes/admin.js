@@ -1,4 +1,5 @@
 const express = require('express');
+const bcrypt = require('bcryptjs');
 const db = require('../db');
 const { authenticateToken, requireAdmin } = require('../middleware/auth');
 
@@ -24,8 +25,8 @@ router.get('/stats', async (req, res) => {
     res.json({
       total_users: parseInt(users.rows[0].count),
       total_dogs: parseInt(dogs.rows[0].count),
-      total_training_sessions: parseInt(sessions.rows[0].count),
-      total_lesson_completions: parseInt(completions.rows[0].count),
+      training_sessions: parseInt(sessions.rows[0].count),
+      lesson_completions: parseInt(completions.rows[0].count),
       recent_users: recentUsers.rows,
     });
   } catch (err) {
@@ -48,6 +49,55 @@ router.get('/users', async (req, res) => {
     res.json(result.rows);
   } catch (err) {
     res.status(500).json({ error: 'Failed to fetch users' });
+  }
+});
+
+// POST /api/admin/users - Create a new user (admin sets password directly)
+router.post('/users', async (req, res) => {
+  const { name, email, password, role = 'user' } = req.body;
+  if (!name || !email || !password) {
+    return res.status(400).json({ error: 'Name, email, and password are required' });
+  }
+  if (!['user', 'admin'].includes(role)) {
+    return res.status(400).json({ error: 'Invalid role' });
+  }
+  if (password.length < 6) {
+    return res.status(400).json({ error: 'Password must be at least 6 characters' });
+  }
+  try {
+    const existing = await db.query('SELECT id FROM users WHERE email = $1', [email]);
+    if (existing.rows.length > 0) {
+      return res.status(409).json({ error: 'A user with that email already exists' });
+    }
+    const password_hash = await bcrypt.hash(password, 10);
+    const result = await db.query(
+      `INSERT INTO users (name, email, password_hash, role)
+       VALUES ($1, $2, $3, $4)
+       RETURNING id, name, email, role, created_at`,
+      [name, email, password_hash, role]
+    );
+    res.status(201).json(result.rows[0]);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to create user' });
+  }
+});
+
+// POST /api/admin/users/:id/reset-password - Admin resets a user's password
+router.post('/users/:id/reset-password', async (req, res) => {
+  const { password } = req.body;
+  if (!password || password.length < 6) {
+    return res.status(400).json({ error: 'Password must be at least 6 characters' });
+  }
+  try {
+    const password_hash = await bcrypt.hash(password, 10);
+    const result = await db.query(
+      'UPDATE users SET password_hash = $1 WHERE id = $2 RETURNING id, name, email',
+      [password_hash, req.params.id]
+    );
+    if (result.rows.length === 0) return res.status(404).json({ error: 'User not found' });
+    res.json({ message: 'Password updated successfully', user: result.rows[0] });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to reset password' });
   }
 });
 
