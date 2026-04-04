@@ -25,8 +25,8 @@ router.get('/stats', async (req, res) => {
     res.json({
       total_users: parseInt(users.rows[0].count),
       total_dogs: parseInt(dogs.rows[0].count),
-      training_sessions: parseInt(sessions.rows[0].count),
-      lesson_completions: parseInt(completions.rows[0].count),
+      total_training_sessions: parseInt(sessions.rows[0].count),
+      total_lesson_completions: parseInt(completions.rows[0].count),
       recent_users: recentUsers.rows,
     });
   } catch (err) {
@@ -52,7 +52,7 @@ router.get('/users', async (req, res) => {
   }
 });
 
-// POST /api/admin/users - Create a new user (admin sets password directly)
+// POST /api/admin/users - Create a new user
 router.post('/users', async (req, res) => {
   const { name, email, password, role = 'user' } = req.body;
   if (!name || !email || !password) {
@@ -82,7 +82,7 @@ router.post('/users', async (req, res) => {
   }
 });
 
-// POST /api/admin/users/:id/reset-password - Admin resets a user's password
+// POST /api/admin/users/:id/reset-password
 router.post('/users/:id/reset-password', async (req, res) => {
   const { password } = req.body;
   if (!password || password.length < 6) {
@@ -101,11 +101,10 @@ router.post('/users/:id/reset-password', async (req, res) => {
   }
 });
 
-// PUT /api/admin/users/:id/role - Change user role
+// PUT /api/admin/users/:id/role
 router.put('/users/:id/role', async (req, res) => {
   const { role } = req.body;
   if (!['user', 'admin'].includes(role)) return res.status(400).json({ error: 'Invalid role' });
-
   try {
     const result = await db.query(
       'UPDATE users SET role = $1 WHERE id = $2 RETURNING id, name, email, role',
@@ -118,7 +117,7 @@ router.put('/users/:id/role', async (req, res) => {
   }
 });
 
-// DELETE /api/admin/users/:id - Delete user
+// DELETE /api/admin/users/:id
 router.delete('/users/:id', async (req, res) => {
   if (parseInt(req.params.id) === req.user.id) {
     return res.status(400).json({ error: 'Cannot delete your own admin account' });
@@ -128,6 +127,63 @@ router.delete('/users/:id', async (req, res) => {
     res.json({ message: 'User deleted' });
   } catch (err) {
     res.status(500).json({ error: 'Failed to delete user' });
+  }
+});
+
+// POST /api/admin/cleanup-scenarios - Remove duplicate scenarios, keep lowest ID per name
+router.post('/cleanup-scenarios', async (req, res) => {
+  const client = await require('../db').pool.connect();
+  try {
+    await client.query('BEGIN');
+
+    const dupResult = await client.query(`
+      SELECT name, MIN(id) AS keep_id, ARRAY_AGG(id ORDER BY id) AS all_ids
+      FROM scenarios
+      GROUP BY name
+      HAVING COUNT(*) > 1
+    `);
+
+    let deletedScenarios = 0;
+    let updatedLogs = 0;
+
+    for (const row of dupResult.rows) {
+      const keepId = row.keep_id;
+      const deleteIds = row.all_ids.filter(id => id !== keepId);
+
+      const logUpdate = await client.query(
+        `UPDATE dog_training_logs SET scenario_id = $1 WHERE scenario_id = ANY($2::int[])`,
+        [keepId, deleteIds]
+      );
+      updatedLogs += logUpdate.rowCount;
+
+      await client.query(
+        `DELETE FROM scenario_tips WHERE scenario_id = ANY($1::int[])`,
+        [deleteIds]
+      );
+
+      const delResult = await client.query(
+        `DELETE FROM scenarios WHERE id = ANY($1::int[])`,
+        [deleteIds]
+      );
+      deletedScenarios += delResult.rowCount;
+    }
+
+    await client.query('COMMIT');
+
+    const remaining = await client.query('SELECT COUNT(*) FROM scenarios');
+    res.json({
+      message: 'Cleanup complete',
+      duplicates_found: dupResult.rows.length,
+      scenarios_deleted: deletedScenarios,
+      training_logs_updated: updatedLogs,
+      scenarios_remaining: parseInt(remaining.rows[0].count),
+    });
+  } catch (err) {
+    await client.query('ROLLBACK');
+    console.error('Cleanup error:', err);
+    res.status(500).json({ error: 'Cleanup failed: ' + err.message });
+  } finally {
+    client.release();
   }
 });
 
