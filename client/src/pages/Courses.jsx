@@ -25,7 +25,11 @@ export default function Courses() {
       setLoading(true);
       setError(null);
       const response = await api.get('/courses');
-      setCourses(response.data);
+      setCourses(response.data.map(c => ({
+        ...c,
+        lesson_count: parseInt(c.lesson_count) || 0,
+        completed_lessons: parseInt(c.completed_lessons) || 0,
+      })));
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to load courses');
       console.error('Error fetching courses:', err);
