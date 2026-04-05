@@ -225,7 +225,7 @@ export default function AdminDashboard() {
                 Training Sessions
               </p>
               <p style={{ fontSize: '2.5rem', fontWeight: 'bold', margin: 0, color: 'var(--primary)' }}>
-                {stats.training_sessions}
+                {stats.total_training_sessions}
               </p>
             </div>
             <div className="card" style={{ textAlign: 'center' }}>
@@ -233,7 +233,7 @@ export default function AdminDashboard() {
                 Lesson Completions
               </p>
               <p style={{ fontSize: '2.5rem', fontWeight: 'bold', margin: 0, color: 'var(--primary)' }}>
-                {stats.lesson_completions}
+                {stats.total_lesson_completions}
               </p>
             </div>
           </div>
@@ -349,7 +349,7 @@ export default function AdminDashboard() {
                         }}
                       >
                         <td style={{ padding: '1rem', fontFamily: 'monospace', fontSize: '0.85rem' }}>
-                          {userItem.id.substring(0, 8)}
+                          {String(userItem.id).substring(0, 8)}
                         </td>
                         <td style={{ padding: '1rem' }}>
                           {userItem.name}
