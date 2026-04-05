@@ -1,8 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import api from '../utils/api';
 import '../styles/scenario-detail.css';
+
+const TIP_CONFIG = {
+  do:     { label: '✅ What To Do',      badgeBg: '#15803D', cardBg: '#F0FDF4', border: '#15803D', titleColor: '#14532D', textColor: '#166534' },
+  dont:   { label: '❌ What To Avoid',   badgeBg: '#B91C1C', cardBg: '#FEF2F2', border: '#B91C1C', titleColor: '#7F1D1D', textColor: '#991B1B' },
+  why:    { label: '🧠 Why It Works',    badgeBg: '#0369A1', cardBg: '#F0F9FF', border: '#0369A1', titleColor: '#0C4A6E', textColor: '#075985' },
+  reward: { label: '🎁 Reward Strategy', badgeBg: '#B45309', cardBg: '#FFFBEB', border: '#B45309', titleColor: '#78350F', textColor: '#92400E' },
+};
 
 export default function ScenarioDetail() {
   const { id } = useParams();
@@ -18,6 +25,9 @@ export default function ScenarioDetail() {
   const [behaviorTags, setBehaviorTags] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [submitMessage, setSubmitMessage] = useState(null);
+  const [currentTip, setCurrentTip] = useState(0);
+  const [viewedTips, setViewedTips] = useState(new Set([0]));
+  const touchStartX = useRef(null);
 
   useEffect(() => {
     fetchScenarioAndDogs();
@@ -132,14 +142,24 @@ export default function ScenarioDetail() {
     cyan: '#CFFAFE'
   };
 
-  const tipsByType = {
-    do: scenario.tips?.filter(t => t.type === 'do') || [],
-    dont: scenario.tips?.filter(t => t.type === 'dont') || [],
-    why: scenario.tips?.filter(t => t.type === 'why') || [],
-    reward: scenario.tips?.filter(t => t.type === 'reward') || []
+  const allTips = scenario.tips?.slice().sort((a, b) => a.order_index - b.order_index) || [];
+  const hasTips = allTips.length > 0;
+
+  const goToTip = (index) => {
+    setCurrentTip(index);
+    setViewedTips(prev => new Set([...prev, index]));
   };
 
-  const hasTips = tipsByType.do.length + tipsByType.dont.length + tipsByType.why.length + tipsByType.reward.length > 0;
+  const handlePrev = () => { if (currentTip > 0) goToTip(currentTip - 1); };
+  const handleNext = () => { if (currentTip < allTips.length - 1) goToTip(currentTip + 1); };
+
+  const handleTouchStart = (e) => { touchStartX.current = e.touches[0].clientX; };
+  const handleTouchEnd = (e) => {
+    if (touchStartX.current === null) return;
+    const diff = touchStartX.current - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 40) diff > 0 ? handleNext() : handlePrev();
+    touchStartX.current = null;
+  };
 
   const ratingLabels = ['', 'Needs work', 'Getting there', 'Good', 'Great', 'Excellent!'];
 
@@ -234,248 +254,117 @@ export default function ScenarioDetail() {
           </div>
         )}
 
-        {/* Training Tips */}
+        {/* Training Tips Carousel */}
         {hasTips && (
           <div style={{ marginBottom: '3rem' }}>
-            <h2 style={{ fontSize: '22px', fontWeight: '700', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              💡 Training Tips
-            </h2>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+              <h2 style={{ fontSize: '22px', fontWeight: '700', margin: 0 }}>💡 Training Tips</h2>
+              <span style={{ fontSize: '14px', fontWeight: '600', color: 'var(--text-muted)' }}>
+                {viewedTips.size} of {allTips.length} viewed
+              </span>
+            </div>
 
-            {/* DO Section */}
-            {tipsByType.do.length > 0 && (
-              <div style={{ marginBottom: '1.5rem' }}>
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  marginBottom: '12px',
-                  padding: '8px 16px',
-                  background: '#15803D',
-                  borderRadius: '8px',
-                  width: 'fit-content'
-                }}>
-                  <span style={{ color: 'white', fontWeight: '700', fontSize: '14px', letterSpacing: '0.5px' }}>
-                    ✅ WHAT TO DO
-                  </span>
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                  {tipsByType.do.map((tip, i) => (
-                    <div key={tip.id} style={{
-                      display: 'flex',
-                      gap: '12px',
-                      alignItems: 'flex-start',
-                      padding: '16px 20px',
-                      background: '#F0FDF4',
-                      border: '1px solid #BBF7D0',
-                      borderLeft: '4px solid #15803D',
-                      borderRadius: '8px'
-                    }}>
-                      <span style={{
-                        width: '24px',
-                        height: '24px',
-                        borderRadius: '50%',
-                        background: '#15803D',
-                        color: 'white',
-                        fontSize: '12px',
-                        fontWeight: '700',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        flexShrink: 0,
-                        marginTop: '1px'
-                      }}>{i + 1}</span>
-                      <div>
-                        {tip.tip_title && (
-                          <p style={{ fontWeight: '700', margin: '0 0 4px 0', color: '#14532D', fontSize: '15px' }}>
-                            {tip.tip_title}
-                          </p>
-                        )}
-                        <p style={{ margin: 0, color: '#166534', lineHeight: '1.6', fontSize: '14px' }}>
-                          {tip.tip_text}
-                        </p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
+            {/* Progress bar */}
+            <div style={{ height: '6px', background: '#E5E7EB', borderRadius: '99px', marginBottom: '1.25rem' }}>
+              <div style={{
+                height: '100%',
+                borderRadius: '99px',
+                background: '#7C3AED',
+                width: `${(viewedTips.size / allTips.length) * 100}%`,
+                transition: 'width 0.3s ease'
+              }} />
+            </div>
 
-            {/* DON'T Section */}
-            {tipsByType.dont.length > 0 && (
-              <div style={{ marginBottom: '1.5rem' }}>
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  marginBottom: '12px',
-                  padding: '8px 16px',
-                  background: '#B91C1C',
-                  borderRadius: '8px',
-                  width: 'fit-content'
-                }}>
-                  <span style={{ color: 'white', fontWeight: '700', fontSize: '14px', letterSpacing: '0.5px' }}>
-                    ❌ WHAT TO AVOID
+            {/* Card */}
+            {(() => {
+              const tip = allTips[currentTip];
+              const cfg = TIP_CONFIG[tip.tip_type] || TIP_CONFIG.do;
+              return (
+                <div
+                  onTouchStart={handleTouchStart}
+                  onTouchEnd={handleTouchEnd}
+                  style={{
+                    background: cfg.cardBg,
+                    border: `1px solid ${cfg.border}`,
+                    borderLeft: `5px solid ${cfg.border}`,
+                    borderRadius: '12px',
+                    padding: '1.75rem',
+                    minHeight: '160px',
+                    position: 'relative',
+                    userSelect: 'none',
+                  }}
+                >
+                  <span style={{
+                    display: 'inline-block',
+                    background: cfg.badgeBg,
+                    color: 'white',
+                    fontSize: '12px',
+                    fontWeight: '700',
+                    letterSpacing: '0.5px',
+                    padding: '4px 12px',
+                    borderRadius: '99px',
+                    marginBottom: '1rem'
+                  }}>
+                    {cfg.label}
                   </span>
+                  {tip.tip_title && (
+                    <p style={{ fontWeight: '700', margin: '0 0 8px 0', color: cfg.titleColor, fontSize: '16px' }}>
+                      {tip.tip_title}
+                    </p>
+                  )}
+                  <p style={{ margin: 0, color: cfg.textColor, lineHeight: '1.7', fontSize: '15px' }}>
+                    {tip.tip_text}
+                  </p>
                 </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                  {tipsByType.dont.map((tip, i) => (
-                    <div key={tip.id} style={{
-                      display: 'flex',
-                      gap: '12px',
-                      alignItems: 'flex-start',
-                      padding: '16px 20px',
-                      background: '#FEF2F2',
-                      border: '1px solid #FECACA',
-                      borderLeft: '4px solid #B91C1C',
-                      borderRadius: '8px'
-                    }}>
-                      <span style={{
-                        width: '24px',
-                        height: '24px',
-                        borderRadius: '50%',
-                        background: '#B91C1C',
-                        color: 'white',
-                        fontSize: '12px',
-                        fontWeight: '700',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        flexShrink: 0,
-                        marginTop: '1px'
-                      }}>{i + 1}</span>
-                      <div>
-                        {tip.tip_title && (
-                          <p style={{ fontWeight: '700', margin: '0 0 4px 0', color: '#7F1D1D', fontSize: '15px' }}>
-                            {tip.tip_title}
-                          </p>
-                        )}
-                        <p style={{ margin: 0, color: '#991B1B', lineHeight: '1.6', fontSize: '14px' }}>
-                          {tip.tip_text}
-                        </p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
+              );
+            })()}
 
-            {/* WHY IT WORKS Section */}
-            {tipsByType.why.length > 0 && (
-              <div style={{ marginBottom: '1.5rem' }}>
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  marginBottom: '12px',
-                  padding: '8px 16px',
-                  background: '#0369A1',
-                  borderRadius: '8px',
-                  width: 'fit-content'
-                }}>
-                  <span style={{ color: 'white', fontWeight: '700', fontSize: '14px', letterSpacing: '0.5px' }}>
-                    🧠 WHY IT WORKS
-                  </span>
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                  {tipsByType.why.map((tip, i) => (
-                    <div key={tip.id} style={{
-                      display: 'flex',
-                      gap: '12px',
-                      alignItems: 'flex-start',
-                      padding: '16px 20px',
-                      background: '#F0F9FF',
-                      border: '1px solid #BAE6FD',
-                      borderLeft: '4px solid #0369A1',
-                      borderRadius: '8px'
-                    }}>
-                      <span style={{
-                        width: '24px',
-                        height: '24px',
-                        borderRadius: '50%',
-                        background: '#0369A1',
-                        color: 'white',
-                        fontSize: '12px',
-                        fontWeight: '700',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        flexShrink: 0,
-                        marginTop: '1px'
-                      }}>{i + 1}</span>
-                      <div>
-                        {tip.tip_title && (
-                          <p style={{ fontWeight: '700', margin: '0 0 4px 0', color: '#0C4A6E', fontSize: '15px' }}>
-                            {tip.tip_title}
-                          </p>
-                        )}
-                        <p style={{ margin: 0, color: '#075985', lineHeight: '1.6', fontSize: '14px' }}>
-                          {tip.tip_text}
-                        </p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
+            {/* Nav controls */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '1rem' }}>
+              <button
+                onClick={handlePrev}
+                disabled={currentTip === 0}
+                style={{
+                  background: 'none', border: '1px solid var(--border)',
+                  borderRadius: '8px', padding: '8px 18px', cursor: currentTip === 0 ? 'default' : 'pointer',
+                  opacity: currentTip === 0 ? 0.3 : 1, fontWeight: '600', fontSize: '14px'
+                }}
+              >
+                ← Prev
+              </button>
 
-            {/* REWARD TIPS Section */}
-            {tipsByType.reward.length > 0 && (
-              <div style={{ marginBottom: '1.5rem' }}>
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  marginBottom: '12px',
-                  padding: '8px 16px',
-                  background: '#B45309',
-                  borderRadius: '8px',
-                  width: 'fit-content'
-                }}>
-                  <span style={{ color: 'white', fontWeight: '700', fontSize: '14px', letterSpacing: '0.5px' }}>
-                    🎁 REWARD STRATEGY
-                  </span>
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                  {tipsByType.reward.map((tip, i) => (
-                    <div key={tip.id} style={{
-                      display: 'flex',
-                      gap: '12px',
-                      alignItems: 'flex-start',
-                      padding: '16px 20px',
-                      background: '#FFFBEB',
-                      border: '1px solid #FDE68A',
-                      borderLeft: '4px solid #B45309',
-                      borderRadius: '8px'
-                    }}>
-                      <span style={{
-                        width: '24px',
-                        height: '24px',
-                        borderRadius: '50%',
-                        background: '#B45309',
-                        color: 'white',
-                        fontSize: '12px',
-                        fontWeight: '700',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        flexShrink: 0,
-                        marginTop: '1px'
-                      }}>{i + 1}</span>
-                      <div>
-                        {tip.tip_title && (
-                          <p style={{ fontWeight: '700', margin: '0 0 4px 0', color: '#78350F', fontSize: '15px' }}>
-                            {tip.tip_title}
-                          </p>
-                        )}
-                        <p style={{ margin: 0, color: '#92400E', lineHeight: '1.6', fontSize: '14px' }}>
-                          {tip.tip_text}
-                        </p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+              {/* Dots */}
+              <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+                {allTips.map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => goToTip(i)}
+                    style={{
+                      width: i === currentTip ? '20px' : '8px',
+                      height: '8px',
+                      borderRadius: '99px',
+                      border: 'none',
+                      cursor: 'pointer',
+                      padding: 0,
+                      transition: 'all 0.2s ease',
+                      background: i === currentTip ? '#7C3AED' : viewedTips.has(i) ? '#C4B5FD' : '#E5E7EB',
+                    }}
+                  />
+                ))}
               </div>
-            )}
+
+              <button
+                onClick={handleNext}
+                disabled={currentTip === allTips.length - 1}
+                style={{
+                  background: 'none', border: '1px solid var(--border)',
+                  borderRadius: '8px', padding: '8px 18px', cursor: currentTip === allTips.length - 1 ? 'default' : 'pointer',
+                  opacity: currentTip === allTips.length - 1 ? 0.3 : 1, fontWeight: '600', fontSize: '14px'
+                }}
+              >
+                Next →
+              </button>
+            </div>
           </div>
         )}
 
