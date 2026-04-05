@@ -27,7 +27,10 @@ export default function ScenarioDetail() {
   const [submitMessage, setSubmitMessage] = useState(null);
   const [currentTip, setCurrentTip] = useState(0);
   const [viewedTips, setViewedTips] = useState(new Set([0]));
+  const [currentStep, setCurrentStep] = useState(0);
+  const [viewedSteps, setViewedSteps] = useState(new Set([0]));
   const touchStartX = useRef(null);
+  const stepTouchStartX = useRef(null);
 
   useEffect(() => {
     fetchScenarioAndDogs();
@@ -142,8 +145,26 @@ export default function ScenarioDetail() {
     cyan: '#CFFAFE'
   };
 
+  const guideSteps = scenario.guide
+    ? scenario.guide.split('\n').filter(line => line.trim()).map(line => line.replace(/^•\s*/, ''))
+    : [];
+
   const allTips = scenario.tips?.slice().sort((a, b) => a.order_index - b.order_index) || [];
   const hasTips = allTips.length > 0;
+
+  const goToStep = (index) => {
+    setCurrentStep(index);
+    setViewedSteps(prev => new Set([...prev, index]));
+  };
+  const handleStepPrev = () => { if (currentStep > 0) goToStep(currentStep - 1); };
+  const handleStepNext = () => { if (currentStep < guideSteps.length - 1) goToStep(currentStep + 1); };
+  const handleStepTouchStart = (e) => { stepTouchStartX.current = e.touches[0].clientX; };
+  const handleStepTouchEnd = (e) => {
+    if (stepTouchStartX.current === null) return;
+    const diff = stepTouchStartX.current - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 40) diff > 0 ? handleStepNext() : handleStepPrev();
+    stepTouchStartX.current = null;
+  };
 
   const goToTip = (index) => {
     setCurrentTip(index);
@@ -211,45 +232,108 @@ export default function ScenarioDetail() {
           </div>
         </div>
 
-        {/* Training Guide */}
-        {scenario.guide && (
+        {/* Training Guide Carousel */}
+        {guideSteps.length > 0 && (
           <div style={{ marginBottom: '3rem' }}>
-            <h2 style={{ fontSize: '22px', fontWeight: '700', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              📖 Training Guide
-            </h2>
-            <div style={{
-              background: 'linear-gradient(135deg, #F8F7FF 0%, #F0F9FF 100%)',
-              border: '1px solid #DDD6FE',
-              borderLeft: '4px solid #7C3AED',
-              borderRadius: '12px',
-              padding: '1.5rem 2rem',
-            }}>
-              <p style={{ fontSize: '12px', fontWeight: '600', color: '#7C3AED', textTransform: 'uppercase', letterSpacing: '0.05em', marginTop: 0, marginBottom: '1rem' }}>
-                Expert-backed techniques from professional trainers
-              </p>
-              <ul style={{ margin: 0, padding: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '14px' }}>
-                {scenario.guide.split('\n').filter(line => line.trim()).map((line, i) => (
-                  <li key={i} style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
-                    <span style={{
-                      width: '22px',
-                      height: '22px',
-                      borderRadius: '50%',
-                      background: '#7C3AED',
-                      color: 'white',
-                      fontSize: '11px',
-                      fontWeight: '700',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      flexShrink: 0,
-                      marginTop: '2px'
-                    }}>{i + 1}</span>
-                    <span style={{ color: '#1E1B4B', lineHeight: '1.65', fontSize: '14.5px' }}>
-                      {line.replace(/^•\s*/, '')}
-                    </span>
-                  </li>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+              <h2 style={{ fontSize: '22px', fontWeight: '700', margin: 0 }}>📖 Training Guide</h2>
+              <span style={{ fontSize: '14px', fontWeight: '600', color: 'var(--text-muted)' }}>
+                {viewedSteps.size} of {guideSteps.length} viewed
+              </span>
+            </div>
+
+            {/* Progress bar */}
+            <div style={{ height: '6px', background: '#E5E7EB', borderRadius: '99px', marginBottom: '1.25rem' }}>
+              <div style={{
+                height: '100%',
+                borderRadius: '99px',
+                background: '#7C3AED',
+                width: `${(viewedSteps.size / guideSteps.length) * 100}%`,
+                transition: 'width 0.3s ease'
+              }} />
+            </div>
+
+            {/* Card */}
+            <div
+              onTouchStart={handleStepTouchStart}
+              onTouchEnd={handleStepTouchEnd}
+              style={{
+                background: 'linear-gradient(135deg, #F8F7FF 0%, #F0F9FF 100%)',
+                border: '1px solid #DDD6FE',
+                borderLeft: '5px solid #7C3AED',
+                borderRadius: '12px',
+                padding: '1.75rem',
+                minHeight: '120px',
+                userSelect: 'none',
+              }}
+            >
+              <div style={{ display: 'flex', gap: '14px', alignItems: 'flex-start' }}>
+                <span style={{
+                  width: '32px',
+                  height: '32px',
+                  borderRadius: '50%',
+                  background: '#7C3AED',
+                  color: 'white',
+                  fontSize: '14px',
+                  fontWeight: '700',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0,
+                }}>
+                  {currentStep + 1}
+                </span>
+                <p style={{ margin: 0, color: '#1E1B4B', lineHeight: '1.7', fontSize: '15px', paddingTop: '4px' }}>
+                  {guideSteps[currentStep]}
+                </p>
+              </div>
+            </div>
+
+            {/* Nav controls */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '1rem' }}>
+              <button
+                onClick={handleStepPrev}
+                disabled={currentStep === 0}
+                style={{
+                  background: 'none', border: '1px solid var(--border)',
+                  borderRadius: '8px', padding: '8px 18px', cursor: currentStep === 0 ? 'default' : 'pointer',
+                  opacity: currentStep === 0 ? 0.3 : 1, fontWeight: '600', fontSize: '14px'
+                }}
+              >
+                ← Prev
+              </button>
+
+              {/* Dots */}
+              <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+                {guideSteps.map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => goToStep(i)}
+                    style={{
+                      width: i === currentStep ? '20px' : '8px',
+                      height: '8px',
+                      borderRadius: '99px',
+                      border: 'none',
+                      cursor: 'pointer',
+                      padding: 0,
+                      transition: 'all 0.2s ease',
+                      background: i === currentStep ? '#7C3AED' : viewedSteps.has(i) ? '#C4B5FD' : '#E5E7EB',
+                    }}
+                  />
                 ))}
-              </ul>
+              </div>
+
+              <button
+                onClick={handleStepNext}
+                disabled={currentStep === guideSteps.length - 1}
+                style={{
+                  background: 'none', border: '1px solid var(--border)',
+                  borderRadius: '8px', padding: '8px 18px', cursor: currentStep === guideSteps.length - 1 ? 'default' : 'pointer',
+                  opacity: currentStep === guideSteps.length - 1 ? 0.3 : 1, fontWeight: '600', fontSize: '14px'
+                }}
+              >
+                Next →
+              </button>
             </div>
           </div>
         )}
