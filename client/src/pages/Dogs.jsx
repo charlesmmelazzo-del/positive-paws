@@ -182,7 +182,7 @@ export default function Dogs() {
                     <h3>{dog.name}</h3>
                     {dog.breed && <p className="breed">{dog.breed}</p>}
                     <div className="dog-meta">
-                      {dog.age_years && <span>Age: {dog.age_years}</span>}
+                      {dog.age && <span>Age: {dog.age}</span>}
                       {dog.gender && <span>Gender: {dog.gender}</span>}
                     </div>
                   </div>
@@ -214,10 +214,14 @@ export default function Dogs() {
         </div>
       </div>
 
+      {/* Add New Dog Modal */}
       {showAddModal && (
         <div className="modal-overlay" onClick={() => setShowAddModal(false)}>
           <div className="modal" onClick={e => e.stopPropagation()}>
-            <button className="modal-close" onClick={() => setShowAddModal(false)}>
+            <button
+              className="modal-close"
+              onClick={() => setShowAddModal(false)}
+            >
               ✕
             </button>
             <h2>Add New Dog</h2>
@@ -235,6 +239,7 @@ export default function Dogs() {
                   required
                 />
               </div>
+
               <div className="form-group">
                 <label htmlFor="breed">Breed</label>
                 <input
@@ -247,6 +252,7 @@ export default function Dogs() {
                   placeholder="e.g., Golden Retriever"
                 />
               </div>
+
               <div className="form-row">
                 <div className="form-group">
                   <label htmlFor="age">Age (years)</label>
@@ -261,6 +267,7 @@ export default function Dogs() {
                     min="0"
                   />
                 </div>
+
                 <div className="form-group">
                   <label htmlFor="weight">Weight (lbs)</label>
                   <input
@@ -275,6 +282,7 @@ export default function Dogs() {
                     step="0.1"
                   />
                 </div>
+
                 <div className="form-group">
                   <label htmlFor="gender">Gender</label>
                   <select
@@ -290,6 +298,7 @@ export default function Dogs() {
                   </select>
                 </div>
               </div>
+
               <div className="form-group">
                 <label htmlFor="photo_url">Photo URL</label>
                 <input
@@ -302,6 +311,7 @@ export default function Dogs() {
                   placeholder="https://example.com/dog.jpg"
                 />
               </div>
+
               <div className="form-group">
                 <label htmlFor="bio">Bio / Notes</label>
                 <textarea
@@ -314,8 +324,13 @@ export default function Dogs() {
                   rows="4"
                 ></textarea>
               </div>
+
               <div className="modal-actions">
-                <button type="button" className="btn btn-ghost" onClick={() => setShowAddModal(false)}>
+                <button
+                  type="button"
+                  className="btn btn-ghost"
+                  onClick={() => setShowAddModal(false)}
+                >
                   Cancel
                 </button>
                 <button type="submit" className="btn btn-primary">
@@ -327,10 +342,14 @@ export default function Dogs() {
         </div>
       )}
 
+      {/* Find Existing Dog Modal */}
       {showFindModal && (
         <div className="modal-overlay" onClick={() => setShowFindModal(false)}>
           <div className="modal modal-large" onClick={e => e.stopPropagation()}>
-            <button className="modal-close" onClick={() => setShowFindModal(false)}>
+            <button
+              className="modal-close"
+              onClick={() => setShowFindModal(false)}
+            >
               ✕
             </button>
             <h2>Find Existing Dog</h2>
@@ -343,6 +362,7 @@ export default function Dogs() {
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
+
             {allDogs.length === 0 ? (
               <div className="loading-center">
                 <div className="spinner"></div>

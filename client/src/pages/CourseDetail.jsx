@@ -25,8 +25,8 @@ export default function CourseDetail() {
     try {
       setLoading(true);
       setError(null);
-      const response = await api.get(`/api/courses/${id}`);
-      setCourse(response.data.course);
+      const response = await api.get(`/courses/${id}`);
+      setCourse(response.data);
       setLessons(response.data.lessons || []);
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to load course');
@@ -46,10 +46,7 @@ export default function CourseDetail() {
   };
 
   const getLessonStatus = (lesson) => {
-    if (!lesson.is_unlocked) {
-      return { icon: '🔒', label: 'Locked' };
-    }
-    if (lesson.is_completed) {
+    if (lesson.completed) {
       return { icon: '✅', label: 'Completed' };
     }
     return { icon: '📖', label: 'In Progress' };
@@ -154,12 +151,11 @@ export default function CourseDetail() {
             <div className="lessons-list">
               {lessons.map((lesson, index) => {
                 const status = getLessonStatus(lesson);
-                const isLocked = !lesson.is_unlocked;
 
                 return (
                   <div
                     key={lesson.id}
-                    className={`lesson-item card ${isLocked ? 'lesson-locked' : 'card-clickable'}`}
+                    className="lesson-item card card-clickable"
                   >
                     <div className="lesson-number">
                       {index + 1}
@@ -167,9 +163,9 @@ export default function CourseDetail() {
 
                     <div className="lesson-info">
                       <h4>{lesson.title}</h4>
-                      {lesson.reading_time && (
+                      {lesson.reading_time_minutes && (
                         <p className="lesson-meta">
-                          {lesson.reading_time} min read
+                          {lesson.reading_time_minutes} min read
                         </p>
                       )}
                     </div>
@@ -183,14 +179,12 @@ export default function CourseDetail() {
                       )}
                     </div>
 
-                    {!isLocked && (
-                      <Link
-                        to={`/lessons/${lesson.id}`}
-                        className="btn btn-secondary btn-sm"
-                      >
-                        {lesson.is_completed ? 'Review' : 'Read'}
-                      </Link>
-                    )}
+                    <Link
+                      to={`/lessons/${lesson.id}`}
+                      className="btn btn-secondary btn-sm"
+                    >
+                      {lesson.completed ? 'Review' : 'Read'}
+                    </Link>
                   </div>
                 );
               })}

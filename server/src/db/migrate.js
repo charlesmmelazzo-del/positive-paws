@@ -193,7 +193,7 @@ const migrate = async () => {
       );
     `);
 
-    // âââ Deduplicate courses and add UNIQUE constraints âââââââââââââââââââââââ
+    // ─── Deduplicate courses and add UNIQUE constraints ───────────────────────
     // Remove duplicate courses (keep lowest id per title+book_source)
     await client.query(`
       DELETE FROM courses WHERE id NOT IN (
@@ -206,7 +206,7 @@ const migrate = async () => {
 
     // Remove duplicate lessons (cascade from course dedup may have already cleaned some)
     await client.query(`
-      DELETE FROM lessons WHERE id NOT	IN (
+      DELETE FROM lessons WHERE id NOT IN (
         SELECT MIN(id) FROM lessons GROUP BY course_id, title
       )
     `);
@@ -235,10 +235,10 @@ const migrate = async () => {
     `);
 
     await client.query('COMMIT');
-    console.log('â Database migration completed successfully!');
+    console.log('✅ Database migration completed successfully!');
   } catch (err) {
     await client.query('ROLLBACK');
-    console.error('â Migration failed:', err);
+    console.error('❌ Migration failed:', err);
     throw err;
   } finally {
     client.release();

@@ -27,9 +27,9 @@ export default function LessonDetail() {
   const fetchLesson = async () => {
     try {
       setLoading(true);
-      const response = await api.get(`/lessons/${lessonId}`);
+      const response = await api.get(`/courses/lessons/${lessonId}`);
       setLesson(response.data);
-      setIsMarked(response.data.is_completed || false);
+      setIsMarked(response.data.completed || false);
       if (response.data.quiz) {
         setQuiz(response.data.quiz);
       }
@@ -120,7 +120,7 @@ export default function LessonDetail() {
           <Link to="/courses" style={{ color: 'var(--primary)' }}>Courses</Link>
           <span style={{ margin: '0 0.5rem', color: 'var(--text-muted)' }}>/</span>
           <Link to={`/courses/${lesson.course_id}`} style={{ color: 'var(--primary)' }}>
-            {lesson.course_name}
+            {lesson.course_title}
           </Link>
           <span style={{ margin: '0 0.5rem', color: 'var(--text-muted)' }}>/</span>
           <span style={{ color: 'var(--text)' }}>{lesson.title}</span>
@@ -176,7 +176,7 @@ export default function LessonDetail() {
                 {quiz.questions?.map((question, qIdx) => (
                   <div key={question.id} style={{ marginBottom: '2rem' }}>
                     <p style={{ fontWeight: '600', marginBottom: '1rem' }}>
-                      {qIdx + 1}. {question.question_text}
+                      {qIdx + 1}. {question.question}
                     </p>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                       {question.options?.map((option, optIdx) => (
@@ -214,15 +214,17 @@ export default function LessonDetail() {
                     {quizResult.passed ? '🎉 You Passed!' : '❌ Try Again'}
                   </h3>
                   <p style={{ fontSize: '2rem', fontWeight: 'bold', margin: '0.5rem 0' }}>
-                    {quizResult.score}/{quizResult.total_questions}
+                    {quizResult.correct}/{quizResult.total}
                   </p>
                   <p style={{ margin: '0.5rem 0' }}>+{quizResult.points_earned} points earned</p>
                 </div>
 
                 {quiz.questions?.map((question, qIdx) => {
                   const userAnswer = selectedAnswers[question.id];
-                  const explanation = quizResult.explanations?.[question.id];
-                  const isCorrect = userAnswer === quizResult.correct_answers?.[question.id];
+                  const resultRow = quizResult.results?.find(r => r.question_id == question.id);
+                  const isCorrect = resultRow?.is_correct;
+                  const explanation = resultRow?.explanation;
+                  const correctAnswer = resultRow?.correct_answer;
 
                   return (
                     <div
@@ -236,14 +238,14 @@ export default function LessonDetail() {
                       }}
                     >
                       <p style={{ fontWeight: '600', margin: '0 0 0.5rem 0' }}>
-                        {qIdx + 1}. {question.question_text}
+                        {qIdx + 1}. {question.question}
                       </p>
                       <p style={{ margin: '0.25rem 0' }}>
                         <strong>Your answer:</strong> {question.options?.[userAnswer]}
                       </p>
                       {!isCorrect && (
                         <p style={{ margin: '0.25rem 0' }}>
-                          <strong>Correct answer:</strong> {question.options?.[quizResult.correct_answers?.[question.id]]}
+                          <strong>Correct answer:</strong> {question.options?.[correctAnswer]}
                         </p>
                       )}
                       {explanation && (
@@ -270,7 +272,7 @@ export default function LessonDetail() {
                         }}>
                           <span>Attempt {quizResult.previous_attempts.length - idx}</span>
                           <span style={{ fontWeight: '600' }}>
-                            {attempt.score}/{attempt.total_questions}
+                            {attempt.score}%
                           </span>
                         </div>
                       ))}

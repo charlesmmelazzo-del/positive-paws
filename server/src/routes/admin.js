@@ -52,7 +52,7 @@ router.get('/users', async (req, res) => {
   }
 });
 
-// POST /api/admin/users - Create a new user
+// POST /api/admin/users - Create a new user (admin sets password directly)
 router.post('/users', async (req, res) => {
   const { name, email, password, role = 'user' } = req.body;
   if (!name || !email || !password) {
@@ -82,7 +82,7 @@ router.post('/users', async (req, res) => {
   }
 });
 
-// POST /api/admin/users/:id/reset-password
+// POST /api/admin/users/:id/reset-password - Admin resets a user's password
 router.post('/users/:id/reset-password', async (req, res) => {
   const { password } = req.body;
   if (!password || password.length < 6) {
@@ -101,10 +101,11 @@ router.post('/users/:id/reset-password', async (req, res) => {
   }
 });
 
-// PUT /api/admin/users/:id/role
+// PUT /api/admin/users/:id/role - Change user role
 router.put('/users/:id/role', async (req, res) => {
   const { role } = req.body;
   if (!['user', 'admin'].includes(role)) return res.status(400).json({ error: 'Invalid role' });
+
   try {
     const result = await db.query(
       'UPDATE users SET role = $1 WHERE id = $2 RETURNING id, name, email, role',
@@ -117,7 +118,7 @@ router.put('/users/:id/role', async (req, res) => {
   }
 });
 
-// DELETE /api/admin/users/:id
+// DELETE /api/admin/users/:id - Delete user
 router.delete('/users/:id', async (req, res) => {
   if (parseInt(req.params.id) === req.user.id) {
     return res.status(400).json({ error: 'Cannot delete your own admin account' });
@@ -136,6 +137,7 @@ router.post('/cleanup-scenarios', async (req, res) => {
   try {
     await client.query('BEGIN');
 
+    // Find duplicate scenario names and the ID to keep (lowest) vs delete
     const dupResult = await client.query(`
       SELECT name, MIN(id) AS keep_id, ARRAY_AGG(id ORDER BY id) AS all_ids
       FROM scenarios
@@ -150,17 +152,20 @@ router.post('/cleanup-scenarios', async (req, res) => {
       const keepId = row.keep_id;
       const deleteIds = row.all_ids.filter(id => id !== keepId);
 
+      // Re-point any training logs that reference duplicate IDs → keep the canonical one
       const logUpdate = await client.query(
         `UPDATE dog_training_logs SET scenario_id = $1 WHERE scenario_id = ANY($2::int[])`,
         [keepId, deleteIds]
       );
       updatedLogs += logUpdate.rowCount;
 
+      // Delete tips for the duplicate scenarios
       await client.query(
         `DELETE FROM scenario_tips WHERE scenario_id = ANY($1::int[])`,
         [deleteIds]
       );
 
+      // Delete the duplicate scenarios
       const delResult = await client.query(
         `DELETE FROM scenarios WHERE id = ANY($1::int[])`,
         [deleteIds]

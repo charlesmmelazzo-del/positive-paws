@@ -7,16 +7,16 @@ const seed = async () => {
   try {
     await client.query('BEGIN');
 
-    // âââ Admin User âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+    // ─── Admin User ───────────────────────────────────────────────────────────
     const passwordHash = await bcrypt.hash('PositivePaws2024!', 12);
     await client.query(`
       INSERT INTO users (name, email, password_hash, role, bio)
       VALUES ('Mike', 'mikemelazzo@me.com', $1, 'admin', 'Positive Paws founder and head trainer.')
       ON CONFLICT (email) DO UPDATE SET password_hash = EXCLUDED.password_hash, role = EXCLUDED.role
     `, [passwordHash]);
-    console.log('â Admin user seeded');
+    console.log('✅ Admin user seeded');
 
-    // âââ Courses ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+    // ─── Courses ──────────────────────────────────────────────────────────────
     const courses = [
       {
         title: 'Understanding Your Dog',
@@ -24,7 +24,7 @@ const seed = async () => {
         book_source: 'Culture Clash',
         author: 'Jean Donaldson',
         difficulty: 'beginner',
-        thumbnail_emoji: 'ð',
+        thumbnail_emoji: '🐕',
         color: 'orange',
         order_index: 1,
       },
@@ -34,7 +34,7 @@ const seed = async () => {
         book_source: "Don't Shoot the Dog",
         author: 'Karen Pryor',
         difficulty: 'beginner',
-        thumbnail_emoji: 'ð§ ',
+        thumbnail_emoji: '🧠',
         color: 'purple',
         order_index: 2,
       },
@@ -44,7 +44,7 @@ const seed = async () => {
         book_source: 'The Power of Positive Dog Training',
         author: 'Pat Miller',
         difficulty: 'intermediate',
-        thumbnail_emoji: 'ð¯',
+        thumbnail_emoji: '🎯',
         color: 'green',
         order_index: 3,
       },
@@ -54,7 +54,7 @@ const seed = async () => {
         book_source: 'Combined Sources',
         author: 'Various Authors',
         difficulty: 'advanced',
-        thumbnail_emoji: 'ð',
+        thumbnail_emoji: '🏆',
         color: 'blue',
         order_index: 4,
       },
@@ -81,7 +81,7 @@ const seed = async () => {
     const courseResult = await client.query('SELECT id FROM courses ORDER BY order_index');
     const [c1, c2, c3, c4] = courseResult.rows.map(r => r.id);
 
-    // âââ Lessons for Course 1: Understanding Your Dog âââââââââââââââââââââââââ
+    // ─── Lessons for Course 1: Understanding Your Dog ─────────────────────────
     const course1Lessons = [
       {
         title: 'Getting the Dog\'s Perspective',
@@ -91,7 +91,7 @@ When we bring a dog into our home, we often make the mistake of assuming they ex
 
 ### Dogs Are Not Furry Humans
 
-Dogs evolved alongside humans for thousands of years, but that doesn't mean they share our values, motivations, or moral framework. A dog who chews your shoes isn't being "spiteful." A dog who jumps on guests isn't being "rude." These behaviors make perfect sense from a dog's perspective â they just don't align with our human expectations.
+Dogs evolved alongside humans for thousands of years, but that doesn't mean they share our values, motivations, or moral framework. A dog who chews your shoes isn't being "spiteful." A dog who jumps on guests isn't being "rude." These behaviors make perfect sense from a dog's perspective — they just don't align with our human expectations.
 
 **The key insight:** Dogs do what works. Period. If a behavior gets rewarded (even accidentally), it will happen more. If a behavior produces no result, it will fade away.
 
@@ -104,16 +104,16 @@ Your dog didn't choose to live with you. They didn't sign a contract agreeing to
 ### What Dogs Are Actually Motivated By
 
 Dogs are motivated by:
-- **Food and resources** â This is their primary currency
-- **Social contact** â Dogs are social animals who want connection
-- **Play and stimulation** â Mental and physical engagement
-- **Safety and comfort** â Avoiding things that feel threatening
+- **Food and resources** — This is their primary currency
+- **Social contact** — Dogs are social animals who want connection
+- **Play and stimulation** — Mental and physical engagement
+- **Safety and comfort** — Avoiding things that feel threatening
 
-Notice what's NOT on the list: "pleasing you." Dogs don't have an innate drive to make their owners happy. They want *rewards*, and when your happiness correlates with those rewards, they'll work to make you happy â but it's always about what's in it for them. And that's perfectly fine!
+Notice what's NOT on the list: "pleasing you." Dogs don't have an innate drive to make their owners happy. They want *rewards*, and when your happiness correlates with those rewards, they'll work to make you happy — but it's always about what's in it for them. And that's perfectly fine!
 
 ### Why This Matters for Training
 
-Understanding that dogs are motivated by consequences â not by love of rules â completely changes how we train. Instead of getting frustrated when your dog "misbehaves," ask yourself: **"What reward is my dog getting for this behavior?"**
+Understanding that dogs are motivated by consequences — not by love of rules — completely changes how we train. Instead of getting frustrated when your dog "misbehaves," ask yourself: **"What reward is my dog getting for this behavior?"**
 
 Usually, you'll find an answer. The jumping dog gets attention (even negative attention counts!). The barking dog makes the mailman go away (huge win from the dog's perspective). The counter-surfing dog occasionally finds food (intermittent reinforcement is powerful).
 
@@ -126,35 +126,35 @@ Once you understand the motivation, you can redirect it.`,
         title: 'What Your Dog Comes Hard-Wired With',
         content: `## Nature vs. Nurture: Your Dog's Built-In Software
 
-Every dog comes with a set of built-in behaviors â things they're genetically predisposed to do regardless of training. Understanding these "factory settings" is essential for realistic expectations and effective training.
+Every dog comes with a set of built-in behaviors — things they're genetically predisposed to do regardless of training. Understanding these "factory settings" is essential for realistic expectations and effective training.
 
 ### The Spectrum of Hard-Wired Behaviors
 
 **Predatory behaviors** form a sequence that varies by breed:
-Orient â Stalk â Chase â Grab-bite â Kill-bite â Dissect â Consume
+Orient → Stalk → Chase → Grab-bite → Kill-bite → Dissect → Consume
 
 Border Collies excel at the stalk-chase portion (herding). Retrievers excel at the grab-bite portion (soft mouth retrieve). Terriers excel at the kill-bite portion (ratting). Greyhounds excel at orient-chase. Understanding where your dog falls on this spectrum explains a lot of "problem behaviors."
 
 ### Social Behaviors
 
 Dogs are pack animals with complex social structures. Key social behaviors include:
-- **Play signals** â The play bow communicates "what follows is play, not aggression"
-- **Appeasement gestures** â Lip licking, yawning, looking away signal "I'm not a threat"
-- **Stress signals** â Panting, pacing, excessive grooming indicate anxiety
-- **Calming signals** â Dogs naturally use these to de-escalate tension
+- **Play signals** — The play bow communicates "what follows is play, not aggression"
+- **Appeasement gestures** — Lip licking, yawning, looking away signal "I'm not a threat"
+- **Stress signals** — Panting, pacing, excessive grooming indicate anxiety
+- **Calming signals** — Dogs naturally use these to de-escalate tension
 
 ### Why Breeds Matter
 
-Breeders have been selectively amplifying and dampening various aspects of dog behavior for centuries. Your Labrador's obsession with fetching things and your Beagle's tendency to follow their nose aren't personality quirks â they're genetic heritage.
+Breeders have been selectively amplifying and dampening various aspects of dog behavior for centuries. Your Labrador's obsession with fetching things and your Beagle's tendency to follow their nose aren't personality quirks — they're genetic heritage.
 
 **Practical implication:** If you have a herding breed, they *will* try to herd. Provide an outlet (agility, herding sports, fetch) rather than trying to suppress a fundamental drive.
 
 ### Developmental Windows
 
 Research shows critical periods in puppy development:
-- **3-12 weeks:** The socialization window â exposures made here shape the dog's lifelong reactions
-- **8-10 weeks:** The fear imprint period â traumatic experiences here can have lasting effects
-- **6-14 months:** Adolescence â increased risk-taking, testing limits, reduced response to cues
+- **3-12 weeks:** The socialization window — exposures made here shape the dog's lifelong reactions
+- **8-10 weeks:** The fear imprint period — traumatic experiences here can have lasting effects
+- **6-14 months:** Adolescence — increased risk-taking, testing limits, reduced response to cues
 
 Missing the socialization window is one of the leading causes of fear and aggression in adult dogs. This is why responsible breeders and shelters prioritize early socialization.
 
@@ -162,7 +162,7 @@ Missing the socialization window is one of the leading causes of fear and aggres
 
 The most successful training works *with* a dog's hard-wired tendencies:
 - Use a food-motivated dog's drive to earn food as a primary reinforcer
-- Give herding dogs a "job" â teach them to herd a ball or take agility classes
+- Give herding dogs a "job" — teach them to herd a ball or take agility classes
 - Provide scent hounds with nosework games that satisfy their drive to sniff
 - Allow retrievers to carry things on walks to channel their genetics productively
 
@@ -185,13 +185,13 @@ After this window closes, new experiences require more repetition and positive a
 
 ### What Proper Socialization Looks Like
 
-Socialization is NOT just exposure â it's **positive exposure**. Throwing a fearful puppy into a dog park is not socialization; it's flooding, and it can make things worse.
+Socialization is NOT just exposure — it's **positive exposure**. Throwing a fearful puppy into a dog park is not socialization; it's flooding, and it can make things worse.
 
 Good socialization involves:
-- **Controlled, positive exposures** â New thing appears â Good things happen
-- **Going at the dog's pace** â Never force interaction
-- **Variety** â Men with hats, children, bicycles, umbrellas, tile floors, stairs, car rides
-- **Making it fun** â Pair every new experience with high-value treats and play
+- **Controlled, positive exposures** — New thing appears → Good things happen
+- **Going at the dog's pace** — Never force interaction
+- **Variety** — Men with hats, children, bicycles, umbrellas, tile floors, stairs, car rides
+- **Making it fun** — Pair every new experience with high-value treats and play
 
 ### Understanding Fear in Dogs
 
@@ -200,11 +200,11 @@ Fear is the primary driver behind most dog aggression. The "aggressive" dog is a
 **The fear-aggression cycle:**
 1. Dog feels threatened
 2. Tries appeasement signals (which humans often miss)
-3. Growls (warning â humans often punish this)
+3. Growls (warning — humans often punish this)
 4. Snaps
 5. Bites
 
-When we punish growling, we remove a warning signal without addressing the underlying fear. The dog doesn't become less scared â they just skip straight to biting.
+When we punish growling, we remove a warning signal without addressing the underlying fear. The dog doesn't become less scared — they just skip straight to biting.
 
 ### What To Do About Fear
 
@@ -219,7 +219,7 @@ This process takes patience but is remarkably effective when done correctly.
 ### The Management Imperative
 
 While working on fear, **management is crucial**. Don't put a fearful dog in situations where they feel they need to bite. Use baby gates, leashes, muzzles (properly conditioned), and spatial distance to keep everyone safe while you work on behavior modification.`,
-        key_takeaway: 'Fear drives most dog aggression. Proper socialization, counter-conditioning, and management are the keys to helping fearful dogs â never punishment.',
+        key_takeaway: 'Fear drives most dog aggression. Proper socialization, counter-conditioning, and management are the keys to helping fearful dogs — never punishment.',
         order_index: 3,
         reading_time_minutes: 9,
       },
@@ -233,17 +233,17 @@ Dogs are consequence machines. Their behavior is shaped entirely by what happens
 
 Behaviorists describe four ways to change behavior:
 
-**Positive Reinforcement (+R):** Add something good â behavior increases
-- Dog sits â gets a treat â sits more often â
+**Positive Reinforcement (+R):** Add something good → behavior increases
+- Dog sits → gets a treat → sits more often ✅
 
-**Negative Punishment (-P):** Remove something good â behavior decreases
-- Dog jumps â you turn away (remove attention) â jumping decreases â
+**Negative Punishment (-P):** Remove something good → behavior decreases
+- Dog jumps → you turn away (remove attention) → jumping decreases ✅
 
-**Positive Punishment (+P):** Add something bad â behavior decreases
-- Dog jumps â gets kneed in chest â may decrease jumping â ï¸ (with significant side effects)
+**Positive Punishment (+P):** Add something bad → behavior decreases
+- Dog jumps → gets kneed in chest → may decrease jumping ⚠️ (with significant side effects)
 
-**Negative Reinforcement (-R):** Remove something bad â behavior increases
-- Dog pulls â prong collar hurts â dog stops pulling â pain stops â collar taught "don't pull" â ï¸
+**Negative Reinforcement (-R):** Remove something bad → behavior increases
+- Dog pulls → prong collar hurts → dog stops pulling → pain stops → collar taught "don't pull" ⚠️
 
 ### Why Positive Reinforcement Wins
 
@@ -253,11 +253,11 @@ Donaldson makes a compelling case for +R over punishment:
 2. **Precise communication:** +R tells your dog exactly what to DO, not just what to stop.
 3. **Relationship preserving:** Your dog sees you as the source of good things.
 4. **You don't need to catch them doing wrong:** You just reward right.
-5. **Dogs trained with +R generalize better** â they learn the *concept*, not just the specific context.
+5. **Dogs trained with +R generalize better** — they learn the *concept*, not just the specific context.
 
 ### The Myth of Dominance
 
-The dominance theory of dog training â the idea that dogs are constantly trying to be "alpha" and you need to establish dominance â has been largely debunked by modern ethology.
+The dominance theory of dog training — the idea that dogs are constantly trying to be "alpha" and you need to establish dominance — has been largely debunked by modern ethology.
 
 Wolves (who dogs are related to but quite different from) in the wild form cooperative family units, not constantly jockeying dominance hierarchies. The "alpha roll" and related techniques are based on flawed research and can cause serious harm.
 
@@ -268,7 +268,7 @@ Wolves (who dogs are related to but quite different from) in the wild form coope
 The key variables in effective training:
 - **Timing:** The reward (or consequence) must happen within 1-2 seconds of the behavior
 - **Value:** Use rewards your dog actually wants in that moment
-- **Rate of reinforcement:** In early training, reward frequently â every time
+- **Rate of reinforcement:** In early training, reward frequently — every time
 - **Clarity:** Be consistent about what earns a reward`,
         key_takeaway: 'Dogs learn through consequences. Positive reinforcement is the most effective and humane training method, producing lasting results without harmful side effects.',
         order_index: 4,
@@ -296,7 +296,7 @@ The key variables in effective training:
       `, [res.rows[0].id, `Quiz: ${lesson.title}`]);
     }
 
-    // âââ Quiz Questions for Course 1 ââââââââââââââââââââââââââââââââââââââââââ
+    // ─── Quiz Questions for Course 1 ──────────────────────────────────────────
     const lessonResults = await client.query('SELECT id FROM lessons WHERE course_id = $1 ORDER BY order_index', [c1]);
     const quizResults = await client.query(`
       SELECT q.id, q.lesson_id FROM quizzes q
@@ -307,13 +307,13 @@ The key variables in effective training:
     const c1QuizQuestions = [
       // Lesson 1 quiz
       [
-        { question: "According to Jean Donaldson, what primarily motivates dogs?", options: ["A desire to please their owners", "Rewards and consequences", "Loyalty and love", "Pack hierarchy"], correct: 1, explanation: "Dogs are motivated by rewards and consequences â what's in it for them. They don't have an innate drive to please humans." },
+        { question: "According to Jean Donaldson, what primarily motivates dogs?", options: ["A desire to please their owners", "Rewards and consequences", "Loyalty and love", "Pack hierarchy"], correct: 1, explanation: "Dogs are motivated by rewards and consequences — what's in it for them. They don't have an innate drive to please humans." },
         { question: "What is the 'Alien in Your House' exercise meant to illustrate?", options: ["Dogs are intelligent like aliens", "Dogs experience confusion in human environments", "Dogs communicate through signals", "Dogs need space exploration"], correct: 1, explanation: "The exercise helps us understand how confusing human expectations can be for dogs who don't inherently understand our rules or language." },
-        { question: "If a dog jumps and gets attention (even scolding), what is likely to happen?", options: ["Jumping will decrease", "Jumping will increase", "Jumping will stay the same", "The dog will learn a new behavior"], correct: 1, explanation: "Any attention â even negative attention â can reinforce behavior. Jumping that gets attention (yelling, pushing away) often increases because the dog got what they wanted: a reaction." },
+        { question: "If a dog jumps and gets attention (even scolding), what is likely to happen?", options: ["Jumping will decrease", "Jumping will increase", "Jumping will stay the same", "The dog will learn a new behavior"], correct: 1, explanation: "Any attention — even negative attention — can reinforce behavior. Jumping that gets attention (yelling, pushing away) often increases because the dog got what they wanted: a reaction." },
       ],
       // Lesson 2 quiz
       [
-        { question: "What is the predatory sequence in dogs?", options: ["Eat, sleep, play, repeat", "Orient, stalk, chase, grab-bite, kill-bite, dissect, consume", "Sniff, dig, bark, bite", "Run, jump, fetch, retrieve"], correct: 1, explanation: "The full predatory sequence is Orient â Stalk â Chase â Grab-bite â Kill-bite â Dissect â Consume. Breeds were developed by emphasizing different parts of this sequence." },
+        { question: "What is the predatory sequence in dogs?", options: ["Eat, sleep, play, repeat", "Orient, stalk, chase, grab-bite, kill-bite, dissect, consume", "Sniff, dig, bark, bite", "Run, jump, fetch, retrieve"], correct: 1, explanation: "The full predatory sequence is Orient → Stalk → Chase → Grab-bite → Kill-bite → Dissect → Consume. Breeds were developed by emphasizing different parts of this sequence." },
         { question: "What is the critical socialization window for puppies?", options: ["Birth to 3 weeks", "3 to 12 weeks", "3 to 6 months", "6 to 12 months"], correct: 1, explanation: "The critical socialization window is 3-12 weeks. During this time, puppies are most receptive to learning that new things are safe." },
         { question: "If a herding breed keeps trying to herd children or other pets, what is the best approach?", options: ["Punish the herding behavior", "Keep the dog in a crate", "Provide appropriate outlets like agility or herding sports", "Ignore the behavior"], correct: 2, explanation: "Herding is a genetic drive. The best approach is to channel it productively through sports, games, or activities that satisfy the instinct rather than fighting it." },
       ],
@@ -321,13 +321,13 @@ The key variables in effective training:
       [
         { question: "What is the primary driver behind most dog aggression?", options: ["Dominance", "Territorial instinct", "Fear", "Hunger"], correct: 2, explanation: "According to Donaldson, fear is the primary driver behind most dog aggression. 'Aggressive' dogs are almost always scared dogs." },
         { question: "What is the danger of punishing a dog's growl?", options: ["It confuses the dog", "It removes a warning signal without addressing the underlying fear", "It makes the dog bark instead", "It has no real effect"], correct: 1, explanation: "Punishing growling removes the warning signal but doesn't address the fear. The dog may then skip straight to biting without warning." },
-        { question: "What does CC&D stand for in dog training?", options: ["Commands, Corrections and Drills", "Counter-Conditioning and Desensitization", "Communication, Control and Direction", "Consistent Conditioning and Direction"], correct: 1, explanation: "CC&D stands for Counter-Conditioning and Desensitization â the gold standard approach for treating fear-based behaviors in dogs." },
+        { question: "What does CC&D stand for in dog training?", options: ["Commands, Corrections and Drills", "Counter-Conditioning and Desensitization", "Communication, Control and Direction", "Consistent Conditioning and Direction"], correct: 1, explanation: "CC&D stands for Counter-Conditioning and Desensitization — the gold standard approach for treating fear-based behaviors in dogs." },
       ],
       // Lesson 4 quiz
       [
-        { question: "In positive reinforcement, what happens to increase a behavior?", options: ["Something bad is added", "Something good is removed", "Something good is added", "Something bad is removed"], correct: 2, explanation: "Positive Reinforcement means adding something good (+) which causes the behavior to increase (reinforcement). Dog sits â gets treat â sits more often." },
-        { question: "Within how many seconds should a reward follow a behavior to be effective?", options: ["5-10 seconds", "Within 30 seconds", "1-2 seconds", "It doesn't matter as long as you reward eventually"], correct: 2, explanation: "Timing is critical â the reward must happen within 1-2 seconds of the behavior for the dog to connect the reward to the specific thing they did." },
-        { question: "The dominance theory of dog training (alpha rolls, etc.) is:", options: ["The most effective approach for large breeds", "Based on sound scientific research", "Largely debunked and potentially harmful", "Required for working dogs"], correct: 2, explanation: "The dominance theory has been largely debunked by modern ethology. Dogs aren't trying to dominate you â they're trying to get what they want. Dominance-based techniques can cause fear and aggression." },
+        { question: "In positive reinforcement, what happens to increase a behavior?", options: ["Something bad is added", "Something good is removed", "Something good is added", "Something bad is removed"], correct: 2, explanation: "Positive Reinforcement means adding something good (+) which causes the behavior to increase (reinforcement). Dog sits → gets treat → sits more often." },
+        { question: "Within how many seconds should a reward follow a behavior to be effective?", options: ["5-10 seconds", "Within 30 seconds", "1-2 seconds", "It doesn't matter as long as you reward eventually"], correct: 2, explanation: "Timing is critical — the reward must happen within 1-2 seconds of the behavior for the dog to connect the reward to the specific thing they did." },
+        { question: "The dominance theory of dog training (alpha rolls, etc.) is:", options: ["The most effective approach for large breeds", "Based on sound scientific research", "Largely debunked and potentially harmful", "Required for working dogs"], correct: 2, explanation: "The dominance theory has been largely debunked by modern ethology. Dogs aren't trying to dominate you — they're trying to get what they want. Dominance-based techniques can cause fear and aggression." },
       ],
     ];
 
@@ -347,9 +347,9 @@ The key variables in effective training:
         `, [quizId, q.question, JSON.stringify(q.options), q.correct, q.explanation, j]);
       }
     }
-    console.log('â Course 1 seeded');
+    console.log('✅ Course 1 seeded');
 
-    // âââ Lessons for Course 2: The Science of Positive Training ââââââââââââââ
+    // ─── Lessons for Course 2: The Science of Positive Training ──────────────
     const course2Lessons = [
       {
         title: 'How Reinforcement Really Works',
@@ -361,13 +361,13 @@ Karen Pryor's "Don't Shoot the Dog" is one of the most influential books ever wr
 
 A reinforcer is anything that increases the likelihood of a behavior being repeated. There are two types:
 
-**Primary reinforcers** â Things that are inherently rewarding without any learning:
+**Primary reinforcers** — Things that are inherently rewarding without any learning:
 - Food (especially high-value treats)
 - Water when thirsty
 - Play
 - Social contact
 
-**Secondary (conditioned) reinforcers** â Things that become rewarding through association:
+**Secondary (conditioned) reinforcers** — Things that become rewarding through association:
 - Clickers
 - Marker words ("Yes!")
 - Praise (if the dog has learned it predicts something good)
@@ -376,13 +376,13 @@ A reinforcer is anything that increases the likelihood of a behavior being repea
 
 This is where training science gets really interesting. *When* you reinforce matters as much as *whether* you reinforce.
 
-**Continuous Reinforcement (CRF):** Every correct behavior is rewarded. Best for teaching new behaviors â the dog learns quickly what earns rewards.
+**Continuous Reinforcement (CRF):** Every correct behavior is rewarded. Best for teaching new behaviors — the dog learns quickly what earns rewards.
 
-**Variable Ratio (VR):** Reward happens after an unpredictable number of correct behaviors. Creates the strongest, most resistant-to-extinction behavior. Think of a slot machine â you never know when it'll pay out, so you keep pulling.
+**Variable Ratio (VR):** Reward happens after an unpredictable number of correct behaviors. Creates the strongest, most resistant-to-extinction behavior. Think of a slot machine — you never know when it'll pay out, so you keep pulling.
 
-**Fixed Interval (FI):** Reward happens after a fixed time period. Creates a "scallop" pattern â behavior drops off right after reward, picks up right before the next expected reward.
+**Fixed Interval (FI):** Reward happens after a fixed time period. Creates a "scallop" pattern — behavior drops off right after reward, picks up right before the next expected reward.
 
-**Practical application:** Teach with CRF. Then move to VR to make the behavior bulletproof. This is why "fading the treats" works â you shift to a VR schedule, and behavior actually becomes stronger because it's no longer predictable.
+**Practical application:** Teach with CRF. Then move to VR to make the behavior bulletproof. This is why "fading the treats" works — you shift to a VR schedule, and behavior actually becomes stronger because it's no longer predictable.
 
 ### The Clicker Revolution
 
@@ -406,7 +406,7 @@ Food is effective because:
 - Most dogs are highly motivated by it
 
 If your dog isn't responding to food, either the food isn't valuable enough (try real meat or cheese) or the environment is too distracting.`,
-        key_takeaway: 'Reinforcers drive behavior. Understanding reinforcement schedules â especially moving from continuous to variable â creates reliable, lasting behavior.',
+        key_takeaway: 'Reinforcers drive behavior. Understanding reinforcement schedules — especially moving from continuous to variable — creates reliable, lasting behavior.',
         order_index: 1,
         reading_time_minutes: 9,
       },
@@ -414,11 +414,11 @@ If your dog isn't responding to food, either the food isn't valuable enough (try
         title: 'Shaping: Building Behaviors Step by Step',
         content: `## The Art and Science of Shaping
 
-Shaping is one of the most powerful tools in a trainer's toolkit. It's the process of teaching complex behaviors by rewarding successive approximations â small steps that gradually move toward the final goal.
+Shaping is one of the most powerful tools in a trainer's toolkit. It's the process of teaching complex behaviors by rewarding successive approximations — small steps that gradually move toward the final goal.
 
 ### The Shaping Process
 
-Imagine you want to teach your dog to put a toy in a box. You can't just wait for them to do it perfectly â they'd never figure it out. Instead, you shape:
+Imagine you want to teach your dog to put a toy in a box. You can't just wait for them to do it perfectly — they'd never figure it out. Instead, you shape:
 
 1. **Reward** looking at the box
 2. **Reward** moving toward the box
@@ -429,7 +429,7 @@ Imagine you want to teach your dog to put a toy in a box. You can't just wait fo
 7. **Reward** dropping toy near the box
 8. **Reward** dropping toy IN the box
 
-Each step is a "criteria" â and you only raise criteria when the dog is succeeding at the current step about 80% of the time.
+Each step is a "criteria" — and you only raise criteria when the dog is succeeding at the current step about 80% of the time.
 
 ### The 10 Laws of Shaping (Karen Pryor)
 
@@ -437,11 +437,11 @@ Each step is a "criteria" â and you only raise criteria when the dog is suc
 2. Train one aspect of a behavior at a time
 3. Before raising criteria, get a reliable response at the current level
 4. When introducing a new criterion, relax the old ones temporarily
-5. Plan ahead â know what you're working toward
+5. Plan ahead — know what you're working toward
 6. Don't interrupt a training session while the dog is working well
-7. Don't end a session on a failed attempt â end on a success
+7. Don't end a session on a failed attempt — end on a success
 8. If you're losing a behavior, go back to a previous reinforced step
-9. Don't change trainers mid-session â consistency matters
+9. Don't change trainers mid-session — consistency matters
 10. If you're having trouble, ask: is it the training or the animal?
 
 ### Targeting
@@ -484,7 +484,7 @@ Most dog owners focus on correcting bad behavior rather than teaching good behav
 
 You've probably heard "be consistent." But there are two types of inconsistency:
 
-*Good inconsistency:* Variable reinforcement schedule â sometimes reward, sometimes don't (after behavior is trained). This strengthens behavior.
+*Good inconsistency:* Variable reinforcement schedule — sometimes reward, sometimes don't (after behavior is trained). This strengthens behavior.
 
 *Bad inconsistency:* Sometimes allowing a behavior, sometimes correcting it. Let your dog jump when you're in play clothes, but correct them when in work clothes? You've just taught them to read your clothing, not to stop jumping.
 
@@ -492,7 +492,7 @@ You've probably heard "be consistent." But there are two types of inconsistency:
 
 ### Mistake 3: The Poisoned Cue
 
-A poisoned cue happens when a cue has been paired with punishment or frustration. If you say "Come!" and your dog doesn't come, then you go get them and scold them â the word "Come" now predicts bad things.
+A poisoned cue happens when a cue has been paired with punishment or frustration. If you say "Come!" and your dog doesn't come, then you go get them and scold them — the word "Come" now predicts bad things.
 
 **Protect your cues:** Never use a cue you can't enforce. Never call your dog to you for something they find unpleasant (nail trims, baths, crate time). Go get them instead.
 
@@ -506,11 +506,11 @@ If your dog only performs when they can see the treat in your hand, you've accid
 
 Dogs are exquisitely sensitive to human emotion. When you're frustrated, your timing worsens, your criteria become unclear, and you're more likely to revert to punishment. Your dog picks up on your stress and becomes anxious.
 
-**Rule:** Keep sessions short (5-10 minutes max), end on success, and if you're getting frustrated â stop. Do something your dog already knows well, reward them generously, and come back tomorrow.
+**Rule:** Keep sessions short (5-10 minutes max), end on success, and if you're getting frustrated — stop. Do something your dog already knows well, reward them generously, and come back tomorrow.
 
 ### Mistake 6: Expecting Too Much Too Fast
 
-Learning takes time and repetition. A behavior learned in the living room will need to be re-taught at the park, at a friend's house, and anywhere the environment is different. Dogs don't generalize well â they learn "sit in kitchen" before they learn "sit everywhere."
+Learning takes time and repetition. A behavior learned in the living room will need to be re-taught at the park, at a friend's house, and anywhere the environment is different. Dogs don't generalize well — they learn "sit in kitchen" before they learn "sit everywhere."
 
 **Practical approach:** Introduce new behaviors in low-distraction environments. Gradually increase difficulty by adding distance, duration, and distraction one at a time (the 3 D's).`,
         key_takeaway: 'Avoid common pitfalls: be consistent about rules, protect your cues from punishment, train rewards not bribes, keep sessions short and positive, and generalize behaviors across environments.',
@@ -545,18 +545,18 @@ Learning takes time and repetition. A behavior learned in the living room will n
     const c2Questions = [
       [
         { question: "What is a secondary (conditioned) reinforcer?", options: ["Food and water", "Something that becomes rewarding through association, like a clicker", "Physical touch and petting", "A punishment that stops bad behavior"], correct: 1, explanation: "Secondary reinforcers like clickers or marker words become rewarding through their association with primary reinforcers (like food)." },
-        { question: "Which reinforcement schedule creates the strongest, most resistant behavior?", options: ["Continuous Reinforcement", "Fixed Interval", "Variable Ratio", "Fixed Ratio"], correct: 2, explanation: "Variable Ratio creates the strongest behavior â like a slot machine, the unpredictability of when the reward comes makes the behavior very persistent." },
-        { question: "When should you use a clicker?", options: ["Before you give a command", "Exactly when the behavior occurs, within 1-2 seconds", "After you've given the reward", "Whenever the dog looks at you"], correct: 1, explanation: "The clicker marks the exact moment of the correct behavior. It should happen within 1-2 seconds of the behavior for the dog to effectively communicate what earned the reward." },
+        { question: "Which reinforcement schedule creates the strongest, most resistant behavior?", options: ["Continuous Reinforcement", "Fixed Interval", "Variable Ratio", "Fixed Ratio"], correct: 2, explanation: "Variable Ratio creates the strongest behavior — like a slot machine, the unpredictability of when the reward comes makes the behavior very persistent." },
+        { question: "When should you use a clicker?", options: ["Before you give a command", "Exactly when the behavior occurs, within 1-2 seconds", "After you've given the reward", "Whenever the dog looks at you"], correct: 1, explanation: "The clicker marks the exact moment of the correct behavior. It should happen within 1-2 seconds of the behavior to effectively communicate what earned the reward." },
       ],
       [
-        { question: "In shaping, you should raise criteria when the dog succeeds approximately what percentage of the time?", options: ["50%", "60%", "80%", "100%"], correct: 2, explanation: "Raise criteria when the dog is succeeding about 80% of the time at the current level â often enough to show understanding, with room for challenge." },
+        { question: "In shaping, you should raise criteria when the dog succeeds approximately what percentage of the time?", options: ["50%", "60%", "80%", "100%"], correct: 2, explanation: "Raise criteria when the dog is succeeding about 80% of the time at the current level — often enough to show understanding, with room for challenge." },
         { question: "What is 'targeting' in dog training?", options: ["Teaching a dog to aim at a specific location", "Teaching a dog to touch a designated target with their nose or paw", "Using a laser pointer for training", "Training the dog to focus on you"], correct: 1, explanation: "Targeting means teaching the dog to touch a specific object (hand, stick, disc) with their nose or paw. It's a foundational skill that can be used to teach many other behaviors." },
         { question: "Which method involves waiting for a dog to naturally perform a behavior and then marking it?", options: ["Shaping", "Luring", "Capturing", "Targeting"], correct: 2, explanation: "Capturing means waiting for the dog to naturally perform a behavior (like a yawn or a stretch) and immediately marking and rewarding it." },
       ],
       [
         { question: "What is a 'poisoned cue'?", options: ["A toxic training tool", "A cue that has been associated with punishment or negative outcomes", "A cue used in dangerous situations", "A cue that was never properly taught"], correct: 1, explanation: "A poisoned cue is one that has been paired with punishment or negative experiences, making the dog hesitant or anxious when they hear it." },
         { question: "The '3 D's' of generalizing behaviors refer to:", options: ["Direction, Distance, Duration", "Distance, Duration, Distraction", "Drive, Discipline, Direction", "Delay, Difficulty, Distraction"], correct: 1, explanation: "The 3 D's are Distance (how far away you are), Duration (how long the behavior is held), and Distraction (what's happening in the environment). Increase each separately." },
-        { question: "If you're getting frustrated during training, the best approach is to:", options: ["Push through it to show dominance", "Increase the difficulty to challenge the dog", "End the session on a success and come back tomorrow", "Switch to correction-based methods"], correct: 2, explanation: "Frustration ruins timing and increases the likelihood of punishment. Always end sessions on a success â even a simple one â and return when you're in a better mindset." },
+        { question: "If you're getting frustrated during training, the best approach is to:", options: ["Push through it to show dominance", "Increase the difficulty to challenge the dog", "End the session on a success and come back tomorrow", "Switch to correction-based methods"], correct: 2, explanation: "Frustration ruins timing and increases the likelihood of punishment. Always end sessions on a success — even a simple one — and return when you're in a better mindset." },
       ],
     ];
 
@@ -575,9 +575,9 @@ Learning takes time and repetition. A behavior learned in the living room will n
         `, [quizId, q.question, JSON.stringify(q.options), q.correct, q.explanation, j]);
       }
     }
-    console.log('â Course 2 seeded');
+    console.log('✅ Course 2 seeded');
 
-    // âââ Lessons for Course 3: Practical Training Skills ââââââââââââââââââââââ
+    // ─── Lessons for Course 3: Practical Training Skills ──────────────────────
     const course3Lessons = [
       {
         title: 'The Foundation Behaviors: Sit, Down, and Stay',
@@ -639,10 +639,10 @@ Train these separately!
 
 ### The Release Cue
 
-A release cue is crucial â it tells your dog "you're done, you can move." Without it, your dog will start to self-release (decide when they're done themselves).
+A release cue is crucial — it tells your dog "you're done, you can move." Without it, your dog will start to self-release (decide when they're done themselves).
 
 Common release words: "Okay," "Free," "Break," "Release"
-Use only one, use it consistently, and celebrate it â make freedom feel like a reward!`,
+Use only one, use it consistently, and celebrate it — make freedom feel like a reward!`,
         key_takeaway: 'Teach sit and down through luring, then fade the lure. Build stay by training duration, distance, and distraction separately. Always release with a cue.',
         order_index: 1,
         reading_time_minutes: 10,
@@ -651,7 +651,7 @@ Use only one, use it consistently, and celebrate it â make freedom feel lik
         title: 'Come When Called: The Most Important Behavior',
         content: `## Recall: The Potentially Life-Saving Behavior
 
-A reliable recall â your dog coming when called â can literally save your dog's life. It can also prevent a lot of everyday frustration. Pat Miller dedicates significant attention to this skill because it's the one most owners get wrong.
+A reliable recall — your dog coming when called — can literally save your dog's life. It can also prevent a lot of everyday frustration. Pat Miller dedicates significant attention to this skill because it's the one most owners get wrong.
 
 ### Why Recall Fails
 
@@ -664,10 +664,10 @@ Dogs are smart. If coming to you consistently predicts bad things, they'll avoid
 
 ### Building an Emergency Recall
 
-The emergency recall uses a special word (different from your everyday "Come") that ALWAYS predicts the most amazing reward your dog can imagine â real meat, cheese, or whatever drives them wild.
+The emergency recall uses a special word (different from your everyday "Come") that ALWAYS predicts the most amazing reward your dog can imagine — real meat, cheese, or whatever drives them wild.
 
 **Building it:**
-1. Choose a unique word: "Cookie!" "Jackpot!" "Here!" â something not in your regular vocabulary
+1. Choose a unique word: "Cookie!" "Jackpot!" "Here!" — something not in your regular vocabulary
 2. At random times when your dog isn't expecting it: say the word in a happy voice
 3. Give 5-10 tiny, wonderful treats in rapid succession
 4. Do this 2-3 times a day for several weeks
@@ -683,10 +683,10 @@ For teaching recall in real-world situations before your dog is ready to be off-
 2. Let the dog explore
 3. When they're at a distance and somewhat distracted, call in a happy voice: "Fido, Come!"
 4. Run backwards (dogs love to chase)
-5. When they reach you: PARTY â treats, praise, play, all of it
+5. When they reach you: PARTY — treats, praise, play, all of it
 6. Occasionally, just pet them and let them go back to playing (recall doesn't always mean fun ends)
 
-**The rule:** Never punish a dog who comes to you, even if it took forever. If you're frustrated by the time they arrive, plaster on a smile and reward anyway. The dog only knows they came to you â that should always be wonderful.
+**The rule:** Never punish a dog who comes to you, even if it took forever. If you're frustrated by the time they arrive, plaster on a smile and reward anyway. The dog only knows they came to you — that should always be wonderful.
 
 ### Real-World Proofing
 
@@ -697,7 +697,7 @@ A recall trained only in the backyard will not work at the dog park. You must pr
 - Multiple times a day in low-stakes situations
 
 Every time your dog comes to you and gets rewarded, the behavior gets stronger. Make "Come" the best word in your dog's vocabulary.`,
-        key_takeaway: 'Recall must always predict wonderful things. Build an emergency recall with a special word and the best treats. Never punish a dog who comes to you â no matter how long it took.',
+        key_takeaway: 'Recall must always predict wonderful things. Build an emergency recall with a special word and the best treats. Never punish a dog who comes to you — no matter how long it took.',
         order_index: 2,
         reading_time_minutes: 8,
       },
@@ -705,15 +705,15 @@ Every time your dog comes to you and gets rewarded, the behavior gets stronger. 
         title: 'Leash Walking: The Art of Loose-Leash Walking',
         content: `## Walking Nicely on a Leash
 
-Loose-leash walking is one of the most commonly cited frustrations for dog owners â and one of the most trainable skills when approached correctly.
+Loose-leash walking is one of the most commonly cited frustrations for dog owners — and one of the most trainable skills when approached correctly.
 
 ### Why Dogs Pull
 
-Dogs pull because pulling works. When a dog pulls forward and the human follows, the dog gets to go where they wanted. Over thousands of walks, pulling has been heavily reinforced. It's not bad behavior â it's a perfectly rational strategy that has reliably worked.
+Dogs pull because pulling works. When a dog pulls forward and the human follows, the dog gets to go where they wanted. Over thousands of walks, pulling has been heavily reinforced. It's not bad behavior — it's a perfectly rational strategy that has reliably worked.
 
 ### The Fundamental Rule
 
-**The leash is a safety net, not a steering wheel.** You want your dog to choose to stay near you because good things happen there â not because they're mechanically constrained.
+**The leash is a safety net, not a steering wheel.** You want your dog to choose to stay near you because good things happen there — not because they're mechanically constrained.
 
 ### Method 1: Be a Tree
 
@@ -737,7 +737,7 @@ Your dog learns: keeping up with you is profitable, pulling means you change dir
 
 ### Method 3: Reward Positioning
 
-Simply reward your dog frequently for being in the right place â at your side with a loose leash. Don't wait for pulling to happen:
+Simply reward your dog frequently for being in the right place — at your side with a loose leash. Don't wait for pulling to happen:
 
 1. Walk
 2. Every 3-5 steps when your dog is in position: mark and reward
@@ -749,18 +749,18 @@ Simply reward your dog frequently for being in the right place â at your si
 **What works well:**
 - Standard flat buckle collar or harness
 - Front-clip harness (reduces pulling power without pain)
-- Head halter (gentle control â requires careful introduction)
+- Head halter (gentle control — requires careful introduction)
 
 **What doesn't work (and why):**
-- Choke chains â cause tracheal damage, create negative associations
-- Prong collars â pain-based, cause fear and aggression
-- Retractable leashes â teach your dog that pulling gets more leash (counterproductive)
+- Choke chains — cause tracheal damage, create negative associations
+- Prong collars — pain-based, cause fear and aggression
+- Retractable leashes — teach your dog that pulling gets more leash (counterproductive)
 
 ### Managing the Walk
 
 Real walks have two components:
-1. **Sniff time** â dogs experience the world through their nose; sniffing is mentally enriching. Let your dog sniff on a loose leash.
-2. **Training time** â periods where you practice loose-leash walking
+1. **Sniff time** — dogs experience the world through their nose; sniffing is mentally enriching. Let your dog sniff on a loose leash.
+2. **Training time** — periods where you practice loose-leash walking
 
 You don't need to train every step of every walk. But dedicated 5-10 minute training periods during walks will build the skill.`,
         key_takeaway: 'Dogs pull because it works. Stop the reinforcement of pulling (be a tree, change direction) and heavily reward loose-leash position. Make walking beside you the most rewarding place to be.',
@@ -794,19 +794,19 @@ You don't need to train every step of every walk. But dedicated 5-10 minute trai
 
     const c3Questions = [
       [
-        { question: "When teaching 'Stay', which element should you train first?", options: ["Distraction", "Distance", "Duration", "Direction"], correct: 2, explanation: "Duration should be trained first â the dog must hold the position for increasing lengths of time before you add distance or distraction." },
-        { question: "What is the purpose of a release cue?", options: ["To signal the dog to sit", "To tell the dog they are done and free to move", "To call the dog to you", "To reward good behavior"], correct: 1, explanation: "A release cue tells the dog 'you're done, you can move now.' Without it, dogs will self-release â deciding on their own when stay is over." },
+        { question: "When teaching 'Stay', which element should you train first?", options: ["Distraction", "Distance", "Duration", "Direction"], correct: 2, explanation: "Duration should be trained first — the dog must hold the position for increasing lengths of time before you add distance or distraction." },
+        { question: "What is the purpose of a release cue?", options: ["To signal the dog to sit", "To tell the dog they are done and free to move", "To call the dog to you", "To reward good behavior"], correct: 1, explanation: "A release cue tells the dog 'you're done, you can move now.' Without it, dogs will self-release — deciding on their own when stay is over." },
         { question: "When luring a 'Down,' where should you move the treat?", options: ["Over the dog's head", "Straight forward away from the dog", "Straight down between the dog's front paws", "To the side of the dog"], correct: 2, explanation: "Move the treat straight down between the dog's front paws. As they follow it down, their elbows will drop to the floor." },
       ],
       [
         { question: "An emergency recall word should be:", options: ["The same as your everyday 'Come' command", "A unique word that always predicts the best reward possible", "A stern command word", "Whatever word the dog already knows"], correct: 1, explanation: "The emergency recall uses a special word (different from everyday 'Come') that always predicts jackpot rewards. Its rarity and consistent reward history make it reliable in emergencies." },
-        { question: "If a dog is slow to come when called, when they finally arrive you should:", options: ["Scold them for taking so long", "Reward them enthusiastically, regardless of how long it took", "Ignore them as punishment for the delay", "Put them on leash immediately"], correct: 1, explanation: "Always reward a dog who comes to you, even if it took a long time. The dog only knows they came â that should always be wonderful. Punishment teaches them that coming to you is bad." },
+        { question: "If a dog is slow to come when called, when they finally arrive you should:", options: ["Scold them for taking so long", "Reward them enthusiastically, regardless of how long it took", "Ignore them as punishment for the delay", "Put them on leash immediately"], correct: 1, explanation: "Always reward a dog who comes to you, even if it took a long time. The dog only knows they came — that should always be wonderful. Punishment teaches them that coming to you is bad." },
         { question: "What is the long line method primarily used for?", options: ["Keeping dogs safe at the beach", "Teaching recall in real environments before the dog is ready to be off-leash", "Preventing pulling on regular walks", "Teaching the dog to stay"], correct: 1, explanation: "A long line (15-30 foot training leash) allows you to practice recall in real environments and with some distractions, while keeping the dog safe before they have a reliable off-leash recall." },
       ],
       [
-        { question: "Why do dogs pull on the leash?", options: ["To show dominance over the owner", "Because they haven't been punished enough for it", "Because pulling has reliably worked â they get to go where they want", "Because they have too much energy"], correct: 2, explanation: "Dogs pull because pulling works. When a dog pulls and the human follows, the dog gets to go where they wanted. It's perfectly rational behavior that has been accidentally reinforced." },
+        { question: "Why do dogs pull on the leash?", options: ["To show dominance over the owner", "Because they haven't been punished enough for it", "Because pulling has reliably worked — they get to go where they want", "Because they have too much energy"], correct: 2, explanation: "Dogs pull because pulling works. When a dog pulls and the human follows, the dog gets to go where they wanted. It's perfectly rational behavior that has been accidentally reinforced." },
         { question: "The 'Be a Tree' method involves:", options: ["Standing still and waiting whenever the leash gets tight", "Using a tree post to attach the leash", "Walking around trees to tire the dog out", "Rewarding the dog near trees"], correct: 0, explanation: "Be a Tree means: when the leash tightens, stop completely and wait. When the dog creates slack, mark and reward. The dog learns that pulling stops forward movement." },
-        { question: "Which type of collar is generally recommended for leash training?", options: ["Prong collar for better control", "Choke chain for quick corrections", "Front-clip harness which reduces pulling without pain", "Retractable leash for freedom"], correct: 2, explanation: "Front-clip harnesses are recommended â they reduce pulling power by redirecting the dog sideways without causing pain or creating negative associations." },
+        { question: "Which type of collar is generally recommended for leash training?", options: ["Prong collar for better control", "Choke chain for quick corrections", "Front-clip harness which reduces pulling without pain", "Retractable leash for freedom"], correct: 2, explanation: "Front-clip harnesses are recommended — they reduce pulling power by redirecting the dog sideways without causing pain or creating negative associations." },
       ],
     ];
 
@@ -825,20 +825,20 @@ You don't need to train every step of every walk. But dedicated 5-10 minute trai
         `, [quizId, q.question, JSON.stringify(q.options), q.correct, q.explanation, j]);
       }
     }
-    console.log('â Course 3 seeded');
+    console.log('✅ Course 3 seeded');
 
-    // âââ Scenarios ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+    // ─── Scenarios ────────────────────────────────────────────────────────────
     const scenarios = [
-      { name: 'Mealtime', description: 'Keep your dog calm and mannerly while you eat', icon: 'ð½ï¸', color: 'orange', category: 'daily', order_index: 1 },
-      { name: 'Feeding Time', description: 'Build good food manners and impulse control at meal preparation', icon: 'ð¥£', color: 'yellow', category: 'daily', order_index: 2 },
-      { name: 'Walk Time', description: 'Enjoy calm, loose-leash walks in any environment', icon: 'ð¦®', color: 'green', category: 'exercise', order_index: 3 },
-      { name: 'Grooming', description: 'Make grooming sessions positive and stress-free', icon: 'âï¸', color: 'pink', category: 'care', order_index: 4 },
-      { name: 'Bedtime', description: 'Establish calm bedtime routines and good sleep habits', icon: 'ð', color: 'blue', category: 'daily', order_index: 5 },
-      { name: 'Guests Arriving', description: 'Teach your dog to greet visitors politely', icon: 'ð', color: 'purple', category: 'social', order_index: 6 },
-      { name: 'Playtime', description: 'Safe, structured, and enriching play sessions', icon: 'ð¾', color: 'red', category: 'exercise', order_index: 7 },
-      { name: 'Dog Park', description: 'Navigate dog-to-dog interactions safely and positively', icon: 'ð¾', color: 'teal', category: 'social', order_index: 8 },
-      { name: 'Car Rides', description: 'Calm and safe travel with your dog', icon: 'ð', color: 'indigo', category: 'travel', order_index: 9 },
-      { name: 'Vet Visit', description: 'Reduce anxiety and stress at veterinary appointments', icon: 'ð¥', color: 'cyan', category: 'care', order_index: 10 },
+      { name: 'Mealtime', description: 'Keep your dog calm and mannerly while you eat', icon: '🍽️', color: 'orange', category: 'daily', order_index: 1 },
+      { name: 'Feeding Time', description: 'Build good food manners and impulse control at meal preparation', icon: '🥣', color: 'yellow', category: 'daily', order_index: 2 },
+      { name: 'Walk Time', description: 'Enjoy calm, loose-leash walks in any environment', icon: '🦮', color: 'green', category: 'exercise', order_index: 3 },
+      { name: 'Grooming', description: 'Make grooming sessions positive and stress-free', icon: '✂️', color: 'pink', category: 'care', order_index: 4 },
+      { name: 'Bedtime', description: 'Establish calm bedtime routines and good sleep habits', icon: '🌙', color: 'blue', category: 'daily', order_index: 5 },
+      { name: 'Guests Arriving', description: 'Teach your dog to greet visitors politely', icon: '👋', color: 'purple', category: 'social', order_index: 6 },
+      { name: 'Playtime', description: 'Safe, structured, and enriching play sessions', icon: '🎾', color: 'red', category: 'exercise', order_index: 7 },
+      { name: 'Dog Park', description: 'Navigate dog-to-dog interactions safely and positively', icon: '🐾', color: 'teal', category: 'social', order_index: 8 },
+      { name: 'Car Rides', description: 'Calm and safe travel with your dog', icon: '🚗', color: 'indigo', category: 'travel', order_index: 9 },
+      { name: 'Vet Visit', description: 'Reduce anxiety and stress at veterinary appointments', icon: '🏥', color: 'cyan', category: 'care', order_index: 10 },
     ];
 
     const scenarioIds = {};
@@ -862,10 +862,10 @@ You don't need to train every step of every walk. But dedicated 5-10 minute trai
     const scenarioTipsData = {
       'Mealtime': [
         { title: 'Teach "Place"', text: 'Train your dog to go to a designated spot (mat or bed) during meals. Start with short durations and gradually increase. Reward them for staying while you eat.', type: 'do' },
-        { title: 'Never feed from the table', text: 'Feeding your dog from the table â even once â teaches them that begging works. Every "just this once" sets the behavior back significantly.', type: 'dont' },
+        { title: 'Never feed from the table', text: 'Feeding your dog from the table — even once — teaches them that begging works. Every "just this once" sets the behavior back significantly.', type: 'dont' },
         { title: 'Preemptive management', text: 'Before you sit down to eat, give your dog a food-stuffed Kong or chew. They\'ll be too busy with their own food to bother you about yours.', type: 'do' },
-        { title: 'Reward the absence of begging', text: 'If your dog is lying quietly while you eat, toss them a small reward. You\'re reinforcing the behavior you want â relaxing while you eat.', type: 'reward' },
-        { title: 'Why dogs beg', text: 'Begging evolved because it worked â humans fed dogs scraps for millennia. It\'s natural behavior that we accidentally reinforce with "cute" table scraps. Once you stop the reinforcement, begging will fade.', type: 'why' },
+        { title: 'Reward the absence of begging', text: 'If your dog is lying quietly while you eat, toss them a small reward. You\'re reinforcing the behavior you want — relaxing while you eat.', type: 'reward' },
+        { title: 'Why dogs beg', text: 'Begging evolved because it worked — humans fed dogs scraps for millennia. It\'s natural behavior that we accidentally reinforce with "cute" table scraps. Once you stop the reinforcement, begging will fade.', type: 'why' },
       ],
       'Feeding Time': [
         { title: 'Ask for a sit before every meal', text: 'Before placing the bowl down, ask for a sit. Only put the bowl down when your dog is sitting. This builds impulse control and a positive ritual around meals.', type: 'do' },
@@ -876,10 +876,10 @@ You don't need to train every step of every walk. But dedicated 5-10 minute trai
       ],
       'Walk Time': [
         { title: 'Stop when the leash tightens', text: 'The instant the leash tightens, stop walking. Wait for your dog to create slack and look back at you. Then reward and continue. Consistency is everything.', type: 'do' },
-        { title: 'Allow sniff breaks', text: 'Sniffing is mentally enriching for dogs â 5 minutes of sniffing can be as tiring as 30 minutes of running. Allow your dog to sniff on a long leash at designated "sniff zones."', type: 'do' },
+        { title: 'Allow sniff breaks', text: 'Sniffing is mentally enriching for dogs — 5 minutes of sniffing can be as tiring as 30 minutes of running. Allow your dog to sniff on a long leash at designated "sniff zones."', type: 'do' },
         { title: 'Don\'t reel in the leash constantly', text: 'Constantly shortening the leash teaches your dog to pull harder to get distance. Instead, stop completely and wait for them to return to you.', type: 'dont' },
         { title: 'Practice "look at me" on walks', text: 'Teach your dog to make eye contact with you on cue ("Watch me" or "Look"). Use this when approaching distractions to redirect attention before pulling begins.', type: 'do' },
-        { title: 'Why leash walking is hard', text: 'Dogs naturally move faster than humans and are motivated to explore their environment. Loose-leash walking requires them to suppress natural drives â which is effortful. Reward it generously.', type: 'why' },
+        { title: 'Why leash walking is hard', text: 'Dogs naturally move faster than humans and are motivated to explore their environment. Loose-leash walking requires them to suppress natural drives — which is effortful. Reward it generously.', type: 'why' },
       ],
       'Grooming': [
         { title: 'Counter-condition grooming tools', text: 'Before using a brush, let your dog sniff it, then give a treat. Touch their shoulder with it, treat. Brush once, treat. Build up slowly so the tools predict good things.', type: 'do' },
@@ -896,25 +896,25 @@ You don't need to train every step of every walk. But dedicated 5-10 minute trai
         { title: 'Why some dogs struggle with sleep', text: 'Dogs who don\'t get enough physical and mental stimulation during the day often struggle to settle at night. A tired dog is a calm dog. Ensure your dog has had adequate exercise and enrichment before expecting them to rest.', type: 'why' },
       ],
       'Guests Arriving': [
-        { title: 'Practice before guests arrive', text: 'Train your dog to sit or go to their mat when the doorbell rings â not just when guests are already present. Use recordings of doorbells and knock sounds to practice without real visitors.', type: 'do' },
+        { title: 'Practice before guests arrive', text: 'Train your dog to sit or go to their mat when the doorbell rings — not just when guests are already present. Use recordings of doorbells and knock sounds to practice without real visitors.', type: 'do' },
         { title: 'Set the dog up for success', text: 'Before guests arrive, exercise your dog. A tired dog is a calmer dog. If needed, put them in another room for the initial chaotic arrival, then bring them in calmly.', type: 'do' },
         { title: 'Don\'t punish excited greetings in the moment', text: 'In the middle of the excitement, punishment increases arousal. Instead, use management (leash, gate) and train the alternative behavior (sit-to-greet) in calm practice sessions.', type: 'dont' },
         { title: 'Ask guests to help train', text: 'Give guests treats and ask them to reward the dog ONLY when all four paws are on the floor. Every guest who enforces your rule is one more training session.', type: 'do' },
-        { title: 'Why dogs jump on guests', text: 'Jumping is a natural greeting behavior â dogs jump up to get closer to human faces. It\'s how puppies greet adult dogs. The behavior is reinforced by the attention it gets, even when that attention is being pushed away.', type: 'why' },
+        { title: 'Why dogs jump on guests', text: 'Jumping is a natural greeting behavior — dogs jump up to get closer to human faces. It\'s how puppies greet adult dogs. The behavior is reinforced by the attention it gets, even when that attention is being pushed away.', type: 'why' },
       ],
       'Playtime': [
         { title: 'Use toys, not hands', text: 'Never use your hands as toys during play. This teaches bite inhibition and prevents the dog from learning that human body parts are appropriate play objects. Always use a toy as the "target" for biting.', type: 'do' },
         { title: 'Teach "drop it" and "leave it"', text: 'These two cues are essential for safe play. "Drop it" means release what\'s in your mouth. "Leave it" means don\'t touch that. Practice these outside of play, then use them during games.', type: 'do' },
         { title: 'End play before the dog gets over-aroused', text: 'When play escalates to biting too hard, zoomies, or loss of control, end the session by becoming boring. Wait for calm, then resume. Teach your dog that calm behavior keeps the game going.', type: 'dont' },
         { title: 'Tug-of-war is great exercise', text: 'Tug is a fantastic, tiring game that most dogs love. It does NOT create aggression. Rules: the dog must drop on cue, and you start and stop the game. This actually teaches impulse control.', type: 'do' },
-        { title: 'Why play matters', text: 'Play is not just fun â it\'s essential for mental and physical well-being, bonding, and stress relief. Dogs who play regularly with their owners have stronger relationships and show fewer behavior problems.', type: 'why' },
+        { title: 'Why play matters', text: 'Play is not just fun — it\'s essential for mental and physical well-being, bonding, and stress relief. Dogs who play regularly with their owners have stronger relationships and show fewer behavior problems.', type: 'why' },
       ],
       'Dog Park': [
         { title: 'Know your dog\'s signals', text: 'Learn to read play vs. stress signals. Play: loose wiggly body, play bow, reciprocal chase. Stress: stiff body, hard stare, tucked tail, whale eye. Leave if you see stress signals in your or other dogs.', type: 'do' },
         { title: 'Avoid the "run in and greet" mistake', text: 'Dogs who rush directly at each other face-to-face are at higher risk of conflict. Good dog greetings are curved, sniffing the side and rear. Practice calm parallel walking before direct greetings.', type: 'do' },
         { title: 'Don\'t leave your dog unsupervised', text: 'Dog parks require constant supervision. Group play can escalate quickly. Your job is to monitor body language and intervene before situations escalate, not to chat with other owners.', type: 'dont' },
         { title: 'Practice recalls at the park', text: 'Call your dog to you periodically during park time. Give a treat, then release them to play again. This keeps your recall sharp and teaches your dog that "Come" doesn\'t mean fun ends.', type: 'do' },
-        { title: 'Why dog parks can be tricky', text: 'Dog parks mix unfamiliar dogs of different ages, sizes, and social styles in an off-leash environment â which is actually unusual in dog social history. Not all dogs enjoy this setting. Know your dog.', type: 'why' },
+        { title: 'Why dog parks can be tricky', text: 'Dog parks mix unfamiliar dogs of different ages, sizes, and social styles in an off-leash environment — which is actually unusual in dog social history. Not all dogs enjoy this setting. Know your dog.', type: 'why' },
       ],
     };
 
@@ -935,30 +935,29 @@ You don't need to train every step of every walk. But dedicated 5-10 minute trai
         }
       }
     }
-    console.log('â Scenarios seeded');
+    console.log('✅ Scenarios seeded');
 
-    
-    // âââ Scenario Guides (book-sourced training guides) âââââââââââââââââââââââ
+    // ─── Scenario Guides (book-sourced training guides) ───────────────────────
     const scenarioGuides = {
-      'Mealtime': `â¢ Before sitting down to eat, give your dog something to do â a stuffed Kong, a chew, or a long-lasting treat on their mat. A busy dog doesn't beg.\nâ¢ Teach a "Go to your place" cue: lure your dog to a designated mat or bed, reward for going there, and gradually build duration until they can hold it through your whole meal.\nâ¢ Start small â practice having your dog on their mat for just 30 seconds while you sit at the table. Reward calm behavior by tossing a treat their way without making eye contact.\nâ¢ If your dog approaches the table, calmly stand, take them back to their mat, and reward for staying. No anger, no drama â just reset and try again.\nâ¢ Be completely consistent: one person feeding from the table undoes weeks of training for the whole family. Everyone must follow the same rules.\nâ¢ A tired dog is a well-behaved dog â schedule vigorous exercise or a long walk before mealtimes to reduce begging drive.\nâ¢ Once your dog is reliably staying on their mat, you can occasionally reward them from a distance (tossing a treat) to reinforce that good things come when they stay back.\nâ¢ If begging is deeply entrenched, manage with a baby gate or closed door at mealtimes while you work on the "place" behavior in separate training sessions.`,
+      'Mealtime': `• Before sitting down to eat, give your dog something to do — a stuffed Kong, a chew, or a long-lasting treat on their mat. A busy dog doesn't beg.\n• Teach a "Go to your place" cue: lure your dog to a designated mat or bed, reward for going there, and gradually build duration until they can hold it through your whole meal.\n• Start small — practice having your dog on their mat for just 30 seconds while you sit at the table. Reward calm behavior by tossing a treat their way without making eye contact.\n• If your dog approaches the table, calmly stand, take them back to their mat, and reward for staying. No anger, no drama — just reset and try again.\n• Be completely consistent: one person feeding from the table undoes weeks of training for the whole family. Everyone must follow the same rules.\n• A tired dog is a well-behaved dog — schedule vigorous exercise or a long walk before mealtimes to reduce begging drive.\n• Once your dog is reliably staying on their mat, you can occasionally reward them from a distance (tossing a treat) to reinforce that good things come when they stay back.\n• If begging is deeply entrenched, manage with a baby gate or closed door at mealtimes while you work on the "place" behavior in separate training sessions.`,
 
-      'Feeding Time': `â¢ Before every meal, ask your dog to sit. Only place the bowl down when all four paws are still and your dog is focusing calmly. This simple ritual builds impulse control daily.\nâ¢ Teach the "Wait" cue at the bowl: say "Wait," begin lowering the bowl, and if your dog lunges, immediately pick it back up. When they hold the sit, lower and release with "Okay!" Dogs learn quickly that patience is what makes dinner appear.\nâ¢ To prevent resource guarding, do the 4-week food bowl program: Week 1, feed your dog entirely by hand, kibble by kibble. Week 2, place the bowl and approach while they eat, dropping in extra kibble each time. Week 3, approach and add something special like a piece of chicken. Week 4, pick up the bowl briefly, drop something delicious on the floor, then return the bowl with even better food in it. The lesson: human hands near the bowl means something great is coming.\nâ¢ Have all family members participate in feeding. The dog should see every person as a source of good things, not a threat to their food.\nâ¢ Feed at consistent times each day. Predictable feeding schedules reduce anxiety and food obsession by removing uncertainty about when the next meal comes.\nâ¢ Avoid leaving food out all day (free feeding). Scheduled meals make training easier, keep you aware of your dog's appetite, and give you a natural daily training opportunity.\nâ¢ Never punish a dog who growls over their food bowl â growling is communication. Address resource guarding through positive counter-conditioning, not confrontation.`,
+      'Feeding Time': `• Before every meal, ask your dog to sit. Only place the bowl down when all four paws are still and your dog is focusing calmly. This simple ritual builds impulse control daily.\n• Teach the "Wait" cue at the bowl: say "Wait," begin lowering the bowl, and if your dog lunges, immediately pick it back up. When they hold the sit, lower and release with "Okay!" Dogs learn quickly that patience is what makes dinner appear.\n• To prevent resource guarding, do the 4-week food bowl program: Week 1, feed your dog entirely by hand, kibble by kibble. Week 2, place the bowl and approach while they eat, dropping in extra kibble each time. Week 3, approach and add something special like a piece of chicken. Week 4, pick up the bowl briefly, drop something delicious on the floor, then return the bowl with even better food in it. The lesson: human hands near the bowl means something great is coming.\n• Have all family members participate in feeding. The dog should see every person as a source of good things, not a threat to their food.\n• Feed at consistent times each day. Predictable feeding schedules reduce anxiety and food obsession by removing uncertainty about when the next meal comes.\n• Avoid leaving food out all day (free feeding). Scheduled meals make training easier, keep you aware of your dog's appetite, and give you a natural daily training opportunity.\n• Never punish a dog who growls over their food bowl — growling is communication. Address resource guarding through positive counter-conditioning, not confrontation.`,
 
-      'Walk Time': `â¢ Before putting on the leash, require calm behavior. If your dog is bouncing off the walls, set the leash down and wait. Pick it up only when they're sitting or standing still. The leash only goes on when they're calm.\nâ¢ The golden rule of loose-leash walking: the moment the leash tightens, stop moving. You are not a sled dog â forward movement is the reward. Stand still and wait for your dog to relieve pressure and look back at you, then click or say "Yes!" and continue.\nâ¢ Click and treat frequently when the leash is loose, not just when your dog is right at your side. Catching and rewarding the loose leash â wherever your dog is â teaches them that keeping slack in the line pays off.\nâ¢ Change directions frequently and unpredictably to keep your dog focused on you. When your dog gets ahead, quietly turn and go the other way. No jerking â just a change in direction that makes them hustle to catch up.\nâ¢ Allow and schedule sniff breaks. Sniffing is deeply satisfying and mentally tiring for dogs. Use a cue like "Go Sniff!" to release your dog to explore, then resume the walk with "Let's Go."\nâ¢ If your dog is too excited or distracted to respond to food, increase distance from the distraction first. Move far enough away that your dog can think again, then reward focus before getting closer.\nâ¢ For dogs who pull very hard, consider a front-clip no-pull harness. The front clip redirects the dog sideways when they pull forward, reducing the pulling force without causing pain. Always use with positive training.\nâ¢ Practice loose-leash walking in low-distraction environments first â inside the house, in your backyard, then a quiet street â before attempting busy parks or sidewalks.`,
+      'Walk Time': `• Before putting on the leash, require calm behavior. If your dog is bouncing off the walls, set the leash down and wait. Pick it up only when they're sitting or standing still. The leash only goes on when they're calm.\n• The golden rule of loose-leash walking: the moment the leash tightens, stop moving. You are not a sled dog — forward movement is the reward. Stand still and wait for your dog to relieve pressure and look back at you, then click or say "Yes!" and continue.\n• Click and treat frequently when the leash is loose, not just when your dog is right at your side. Catching and rewarding the loose leash — wherever your dog is — teaches them that keeping slack in the line pays off.\n• Change directions frequently and unpredictably to keep your dog focused on you. When your dog gets ahead, quietly turn and go the other way. No jerking — just a change in direction that makes them hustle to catch up.\n• Allow and schedule sniff breaks. Sniffing is deeply satisfying and mentally tiring for dogs. Use a cue like "Go Sniff!" to release your dog to explore, then resume the walk with "Let's Go."\n• If your dog is too excited or distracted to respond to food, increase distance from the distraction first. Move far enough away that your dog can think again, then reward focus before getting closer.\n• For dogs who pull very hard, consider a front-clip no-pull harness. The front clip redirects the dog sideways when they pull forward, reducing the pulling force without causing pain. Always use with positive training.\n• Practice loose-leash walking in low-distraction environments first — inside the house, in your backyard, then a quiet street — before attempting busy parks or sidewalks.`,
 
-      'Grooming': `â¢ Before any grooming session, pair every tool with treats: let your dog sniff the brush, give a treat. Touch them with it, give a treat. Do one brush stroke, give a treat. Build the association that grooming equipment predicts good things.\nâ¢ Keep early sessions extremely short â 2 to 3 minutes maximum. End while your dog is still relaxed and happy. A short positive session is far more valuable than a long stressful one.\nâ¢ Work in small increments: Day 1, touch the brush to your dog's shoulder once. Day 2, two brush strokes. Progress at your dog's pace, not yours. Never push through visible stress (whale eye, turning away, freezing, panting).\nâ¢ Use a lick mat smeared with peanut butter, cream cheese, or wet food during grooming sessions. Having something to lick keeps dogs calm, focused, and creates a strong positive association.\nâ¢ Practice handling paws, ears, and mouth daily â especially with puppies. Pick up each paw briefly and give a treat. Touch inside the ear flap and treat. Gently hold the muzzle and treat. This "cooperative care" training pays dividends at every grooming and vet visit.\nâ¢ For nail trims, start by clicking and treating just for touching the nail with your clippers. Then for a gentle squeeze (no cutting), then one tiny sliver at a time. Using a scratch board (a piece of sandpaper on the floor) also lets dogs file their own front nails in a positive, dog-powered way.\nâ¢ Never chase, corner, or forcibly restrain a dog to complete grooming. This destroys trust. Take a step back in your desensitization process and rebuild confidence from where your dog feels safe.\nâ¢ Always end grooming sessions with your dog's favorite reward â a play session, a walk, or a special treat â so the whole experience ends on the best possible note.`,
+      'Grooming': `• Before any grooming session, pair every tool with treats: let your dog sniff the brush, give a treat. Touch them with it, give a treat. Do one brush stroke, give a treat. Build the association that grooming equipment predicts good things.\n• Keep early sessions extremely short — 2 to 3 minutes maximum. End while your dog is still relaxed and happy. A short positive session is far more valuable than a long stressful one.\n• Work in small increments: Day 1, touch the brush to your dog's shoulder once. Day 2, two brush strokes. Progress at your dog's pace, not yours. Never push through visible stress (whale eye, turning away, freezing, panting).\n• Use a lick mat smeared with peanut butter, cream cheese, or wet food during grooming sessions. Having something to lick keeps dogs calm, focused, and creates a strong positive association.\n• Practice handling paws, ears, and mouth daily — especially with puppies. Pick up each paw briefly and give a treat. Touch inside the ear flap and treat. Gently hold the muzzle and treat. This "cooperative care" training pays dividends at every grooming and vet visit.\n• For nail trims, start by clicking and treating just for touching the nail with your clippers. Then for a gentle squeeze (no cutting), then one tiny sliver at a time. Using a scratch board (a piece of sandpaper on the floor) also lets dogs file their own front nails in a positive, dog-powered way.\n• Never chase, corner, or forcibly restrain a dog to complete grooming. This destroys trust. Take a step back in your desensitization process and rebuild confidence from where your dog feels safe.\n• Always end grooming sessions with your dog's favorite reward — a play session, a walk, or a special treat — so the whole experience ends on the best possible note.`,
 
-      'Bedtime': `â¢ Establish a consistent nighttime routine and stick to it. A predictable sequence â last potty trip outside, quiet wind-down time, settling on their bed â teaches your dog what's coming and speeds up the transition to calm.\nâ¢ Give your dog vigorous exercise and mental stimulation in the hours before bedtime. A dog who has been adequately tired out physically and mentally will settle far more easily than one who hasn't.\nâ¢ Teach the "Settle" cue in short sessions away from bedtime: lure your dog onto their designated mat or bed, reward them for lying down, and gradually build duration by rewarding calm, relaxed behavior. Add the cue ("Settle," "Bed," "Place") once they reliably go to their spot.\nâ¢ If your dog sleeps in a crate, make the crate genuinely wonderful. Feed meals inside it. Place their most comfortable bedding in it. Offer a frozen, food-stuffed Kong at crate time â this gives them something satisfying to do and creates a strong positive association with going in.\nâ¢ Never use the crate as punishment. If the crate is only used for unpleasant confinement, your dog will resist it. The crate should be their favorite resting den, not a jail.\nâ¢ For dogs who cry or bark in their crate at night, don't let them out in response to noise â this reinforces the behavior. Wait for even a brief moment of quiet, then reward. Gradually extend the quiet period required before release.\nâ¢ A white noise machine, calming music, or a heartbeat toy (for puppies) can help sensitive dogs relax and drown out startling nighttime sounds.\nâ¢ If your dog wakes you at night, keep the interaction very boring â a quick, quiet potty break with no play or conversation. A dull response discourages unnecessary wake-ups.`,
+      'Bedtime': `• Establish a consistent nighttime routine and stick to it. A predictable sequence — last potty trip outside, quiet wind-down time, settling on their bed — teaches your dog what's coming and speeds up the transition to calm.\n• Give your dog vigorous exercise and mental stimulation in the hours before bedtime. A dog who has been adequately tired out physically and mentally will settle far more easily than one who hasn't.\n• Teach the "Settle" cue in short sessions away from bedtime: lure your dog onto their designated mat or bed, reward them for lying down, and gradually build duration by rewarding calm, relaxed behavior. Add the cue ("Settle," "Bed," "Place") once they reliably go to their spot.\n• If your dog sleeps in a crate, make the crate genuinely wonderful. Feed meals inside it. Place their most comfortable bedding in it. Offer a frozen, food-stuffed Kong at crate time — this gives them something satisfying to do and creates a strong positive association with going in.\n• Never use the crate as punishment. If the crate is only used for unpleasant confinement, your dog will resist it. The crate should be their favorite resting den, not a jail.\n• For dogs who cry or bark in their crate at night, don't let them out in response to noise — this reinforces the behavior. Wait for even a brief moment of quiet, then reward. Gradually extend the quiet period required before release.\n• A white noise machine, calming music, or a heartbeat toy (for puppies) can help sensitive dogs relax and drown out startling nighttime sounds.\n• If your dog wakes you at night, keep the interaction very boring — a quick, quiet potty break with no play or conversation. A dull response discourages unnecessary wake-ups.`,
 
-      'Guests Arriving': `â¢ Train the behavior before guests arrive, not during the chaos. Use recorded doorbell sounds and practice having your dog sit, then reward. Pair the sound of the doorbell with going to a designated greeting mat near the door.\nâ¢ Exercise your dog before guests arrive. A dog who has been on a long walk or had a vigorous play session is much calmer and easier to manage when company shows up.\nâ¢ Use management tools while training is in progress: a leash, a baby gate, or a tether near the door. This prevents your dog from rehearsing jumping on guests, which only makes the behavior stronger.\nâ¢ Ask guests to completely ignore your dog until all four paws are on the floor â no eye contact, no talking, no touching while the dog is jumping. Even pushing the dog away counts as attention and reinforces the behavior.\nâ¢ Give arriving guests a handful of treats and instructions: "Ask for a sit, then reward." Every guest who follows your protocol is an additional training session. Every guest who lets your dog jump undoes your work.\nâ¢ Practice "staged arrivals" with a friend: have them knock, leave, come back, knock again. The more repetitions of the doorbell-then-calm routine, the faster your dog learns that arrivals are no big deal.\nâ¢ Teach your dog that the doorbell is a cue to go to their mat and wait for a release. This incompatible behavior â lying on a mat â makes it physically impossible to simultaneously jump on guests.\nâ¢ Once the initial excitement passes, supervised interaction on a loose leash lets you reward your dog for polite greetings and step back in if they start to get overly excited.`,
+      'Guests Arriving': `• Train the behavior before guests arrive, not during the chaos. Use recorded doorbell sounds and practice having your dog sit, then reward. Pair the sound of the doorbell with going to a designated greeting mat near the door.\n• Exercise your dog before guests arrive. A dog who has been on a long walk or had a vigorous play session is much calmer and easier to manage when company shows up.\n• Use management tools while training is in progress: a leash, a baby gate, or a tether near the door. This prevents your dog from rehearsing jumping on guests, which only makes the behavior stronger.\n• Ask guests to completely ignore your dog until all four paws are on the floor — no eye contact, no talking, no touching while the dog is jumping. Even pushing the dog away counts as attention and reinforces the behavior.\n• Give arriving guests a handful of treats and instructions: "Ask for a sit, then reward." Every guest who follows your protocol is an additional training session. Every guest who lets your dog jump undoes your work.\n• Practice "staged arrivals" with a friend: have them knock, leave, come back, knock again. The more repetitions of the doorbell-then-calm routine, the faster your dog learns that arrivals are no big deal.\n• Teach your dog that the doorbell is a cue to go to their mat and wait for a release. This incompatible behavior — lying on a mat — makes it physically impossible to simultaneously jump on guests.\n• Once the initial excitement passes, supervised interaction on a loose leash lets you reward your dog for polite greetings and step back in if they start to get overly excited.`,
 
-      'Playtime': `â¢ Always use a toy as the target for play, never your hands or feet. Allowing a dog to grab or mouth human body parts â even gently â teaches them that bodies are appropriate play objects, which creates problems as the dog grows larger.\nâ¢ Teach "Drop It" before you need it: offer a toy, let the dog grab it, present a high-value treat near their nose, and the moment they release, say "Drop it!" and reward. Practice this outside of exciting play sessions first.\nâ¢ Tug-of-war is excellent exercise and a great bonding activity â it does NOT create aggression when played with clear rules. The rules: you start and stop the game, the dog must drop on cue, and if teeth touch skin, the game immediately pauses. Consistent rules build impulse control.\nâ¢ Keep play sessions shorter than you think they should be. Stopping the game while your dog still wants more keeps enthusiasm high for next time. Play until boredom or over-arousal, and sessions end on a sour note.\nâ¢ Watch for escalating arousal: hard biting, inability to respond to cues, frantic movement, snapping. When you see these signs, calmly end the session by becoming boring â stand still, cross your arms, turn away. Resume when your dog has settled.\nâ¢ Use play as a reward for training. Work on a few behaviors, then explode into a play session as the jackpot. This makes training thrilling and play meaningful.\nâ¢ Rotate toys to keep them novel and exciting. A toy your dog hasn't seen for two weeks is as exciting as a brand-new toy.\nâ¢ For fetch, teach the "retrieve" chain backward: first shape your dog to bring the item back and release it, then build the chase and catch. A dog who doesn't return the toy is playing keep-away, not fetch.`,
+      'Playtime': `• Always use a toy as the target for play, never your hands or feet. Allowing a dog to grab or mouth human body parts — even gently — teaches them that bodies are appropriate play objects, which creates problems as the dog grows larger.\n• Teach "Drop It" before you need it: offer a toy, let the dog grab it, present a high-value treat near their nose, and the moment they release, say "Drop it!" and reward. Practice this outside of exciting play sessions first.\n• Tug-of-war is excellent exercise and a great bonding activity — it does NOT create aggression when played with clear rules. The rules: you start and stop the game, the dog must drop on cue, and if teeth touch skin, the game immediately pauses. Consistent rules build impulse control.\n• Keep play sessions shorter than you think they should be. Stopping the game while your dog still wants more keeps enthusiasm high for next time. Play until boredom or over-arousal, and sessions end on a sour note.\n• Watch for escalating arousal: hard biting, inability to respond to cues, frantic movement, snapping. When you see these signs, calmly end the session by becoming boring — stand still, cross your arms, turn away. Resume when your dog has settled.\n• Use play as a reward for training. Work on a few behaviors, then explode into a play session as the jackpot. This makes training thrilling and play meaningful.\n• Rotate toys to keep them novel and exciting. A toy your dog hasn't seen for two weeks is as exciting as a brand-new toy.\n• For fetch, teach the "retrieve" chain backward: first shape your dog to bring the item back and release it, then build the chase and catch. A dog who doesn't return the toy is playing keep-away, not fetch.`,
 
-      'Dog Park': `â¢ Before visiting an off-leash dog park, ensure your dog has a reliable recall in low-distraction environments. A solid "Come!" is a safety necessity. Practice recalls regularly â call your dog, give a high-value treat, then release them back to play.\nâ¢ Observe the park before entering. Watch through the fence for a minute: Are the dogs playing loosely and reciprocally? Are there any stiff, over-intense interactions? If the energy looks chaotic or one dog is being bullied, wait or choose another time.\nâ¢ Remove your dog's leash inside the double-gated entry before letting them through. A leashed dog surrounded by off-leash dogs is a setup for frustration and conflict â the leash creates a disadvantage in canine body language.\nâ¢ Keep your attention on your dog at all times. Monitor their body language and be ready to intervene before situations escalate. This is not the time to look at your phone or chat at length with other owners.\nâ¢ Practice recalls periodically during the visit: call your dog over, give a high-value treat, then release them with "Go play!" This prevents the recall from signaling that fun is over, and keeps the behavior sharp.\nâ¢ Know the difference between play and bullying. Normal play: loose, bouncy bodies; play bows; taking turns chasing. Bullying: persistent chasing with no breaks, one dog trying to escape repeatedly, stiff bodies and hard stares.\nâ¢ Not all dogs enjoy dog parks, and that's okay. Some dogs prefer small playgroups with known dogs, or one-on-one play dates. Forcing an anxious dog into a busy park does not build confidence â it builds anxiety.\nâ¢ Ensure your dog is fully vaccinated, flea and tick preventatives are current, and they are spayed or neutered before regular park visits to minimize health risks and social friction.`,
+      'Dog Park': `• Before visiting an off-leash dog park, ensure your dog has a reliable recall in low-distraction environments. A solid "Come!" is a safety necessity. Practice recalls regularly — call your dog, give a high-value treat, then release them back to play.\n• Observe the park before entering. Watch through the fence for a minute: Are the dogs playing loosely and reciprocally? Are there any stiff, over-intense interactions? If the energy looks chaotic or one dog is being bullied, wait or choose another time.\n• Remove your dog's leash inside the double-gated entry before letting them through. A leashed dog surrounded by off-leash dogs is a setup for frustration and conflict — the leash creates a disadvantage in canine body language.\n• Keep your attention on your dog at all times. Monitor their body language and be ready to intervene before situations escalate. This is not the time to look at your phone or chat at length with other owners.\n• Practice recalls periodically during the visit: call your dog over, give a high-value treat, then release them with "Go play!" This prevents the recall from signaling that fun is over, and keeps the behavior sharp.\n• Know the difference between play and bullying. Normal play: loose, bouncy bodies; play bows; taking turns chasing. Bullying: persistent chasing with no breaks, one dog trying to escape repeatedly, stiff bodies and hard stares.\n• Not all dogs enjoy dog parks, and that's okay. Some dogs prefer small playgroups with known dogs, or one-on-one play dates. Forcing an anxious dog into a busy park does not build confidence — it builds anxiety.\n• Ensure your dog is fully vaccinated, flea and tick preventatives are current, and they are spayed or neutered before regular park visits to minimize health risks and social friction.`,
 
-      'Car Rides': `â¢ Build positive car associations before asking your dog to go anywhere. Start by rewarding your dog for approaching the car willingly. Next, reward for getting in (car parked and off). Then start the engine, give treats, turn it off. Gradually build from there.\nâ¢ Take very short "positive destination" trips to start: drive to the end of the block and back. Drive to the dog park. Drive to get a puppuccino. Make the car predict excellent things so often that your dog is eager to hop in.\nâ¢ Use a crate or a certified dog car harness for safety. Both protect your dog physically in an accident and reduce anxiety by limiting their ability to pace and whine. A covered crate feels especially den-like and calming.\nâ¢ For dogs who are anxious in cars, cover the crate with a blanket to reduce visual stimulation. Many dogs who are distressed by moving scenery calm down significantly when they can't see it.\nâ¢ Never leave your dog in a parked car in warm weather. A car with windows cracked in 70-degree weather can reach deadly temperatures within minutes. This is a non-negotiable safety rule.\nâ¢ If your dog gets carsick, keep the car well ventilated, limit food for two hours before traveling, drive smoothly (minimize sudden stops and sharp turns), and talk to your vet about motion-sickness medications.\nâ¢ On longer trips, stop every one to two hours for a brief walk and potty break. Physical movement helps dissipate anxiety and prevents stiffness.\nâ¢ If your dog is severely car-anxious, talk to your veterinarian. Short-term anti-anxiety medications or supplements can reduce the emotional intensity during desensitization, making the process faster and more humane.`,
+      'Car Rides': `• Build positive car associations before asking your dog to go anywhere. Start by rewarding your dog for approaching the car willingly. Next, reward for getting in (car parked and off). Then start the engine, give treats, turn it off. Gradually build from there.\n• Take very short "positive destination" trips to start: drive to the end of the block and back. Drive to the dog park. Drive to get a puppuccino. Make the car predict excellent things so often that your dog is eager to hop in.\n• Use a crate or a certified dog car harness for safety. Both protect your dog physically in an accident and reduce anxiety by limiting their ability to pace and whine. A covered crate feels especially den-like and calming.\n• For dogs who are anxious in cars, cover the crate with a blanket to reduce visual stimulation. Many dogs who are distressed by moving scenery calm down significantly when they can't see it.\n• Never leave your dog in a parked car in warm weather. A car with windows cracked in 70-degree weather can reach deadly temperatures within minutes. This is a non-negotiable safety rule.\n• If your dog gets carsick, keep the car well ventilated, limit food for two hours before traveling, drive smoothly (minimize sudden stops and sharp turns), and talk to your vet about motion-sickness medications.\n• On longer trips, stop every one to two hours for a brief walk and potty break. Physical movement helps dissipate anxiety and prevents stiffness.\n• If your dog is severely car-anxious, talk to your veterinarian. Short-term anti-anxiety medications or supplements can reduce the emotional intensity during desensitization, making the process faster and more humane.`,
 
-      'Vet Visit': `â¢ Schedule "happy visits" to the vet clinic regularly â walk in, have the staff give your dog treats, and leave without any examination. This teaches your dog that the vet's office predicts good things rather than scary procedures.\nâ¢ Practice handling at home that mimics what happens at the vet: lift each paw and press on the pads, look in both ears, gently open the mouth, feel along the belly and ribs. Click and treat generously for tolerance and cooperation.\nâ¢ Bring your dog's highest-value treats to every vet appointment â something they don't get at any other time. Ask the vet and tech to offer treats throughout the exam. Food actively creates new positive associations with the experience.\nâ¢ Stay calm yourself. Dogs are exquisitely sensitive to your emotional state. If you are anxious about the visit, your dog feels it and becomes more anxious themselves. Take a breath, speak in a relaxed tone, and project confidence.\nâ¢ Ask your veterinary practice about "fear-free" or "low-stress handling" techniques. Many modern practices use calming pheromones, non-slip mats, and minimize restraint. These approaches make a significant difference for anxious dogs.\nâ¢ If your dog is highly anxious at the vet, talk to your vet about pre-visit medications. Gabapentin given the night before and morning of an appointment can dramatically reduce anxiety without over-sedating, making the visit tolerable for everyone.\nâ¢ Request that your dog be examined on the floor rather than the exam table if they are more comfortable there. A relaxed dog on the floor is safer and easier to examine than a panicking dog on a table.\nâ¢ Maintain regular wellness visits even when nothing is wrong. The more often your dog visits the clinic for positive experiences, the less the "vet office" becomes associated exclusively with scary procedures.`,
+      'Vet Visit': `• Schedule "happy visits" to the vet clinic regularly — walk in, have the staff give your dog treats, and leave without any examination. This teaches your dog that the vet's office predicts good things rather than scary procedures.\n• Practice handling at home that mimics what happens at the vet: lift each paw and press on the pads, look in both ears, gently open the mouth, feel along the belly and ribs. Click and treat generously for tolerance and cooperation.\n• Bring your dog's highest-value treats to every vet appointment — something they don't get at any other time. Ask the vet and tech to offer treats throughout the exam. Food actively creates new positive associations with the experience.\n• Stay calm yourself. Dogs are exquisitely sensitive to your emotional state. If you are anxious about the visit, your dog feels it and becomes more anxious themselves. Take a breath, speak in a relaxed tone, and project confidence.\n• Ask your veterinary practice about "fear-free" or "low-stress handling" techniques. Many modern practices use calming pheromones, non-slip mats, and minimize restraint. These approaches make a significant difference for anxious dogs.\n• If your dog is highly anxious at the vet, talk to your vet about pre-visit medications. Gabapentin given the night before and morning of an appointment can dramatically reduce anxiety without over-sedating, making the visit tolerable for everyone.\n• Request that your dog be examined on the floor rather than the exam table if they are more comfortable there. A relaxed dog on the floor is safer and easier to examine than a panicking dog on a table.\n• Maintain regular wellness visits even when nothing is wrong. The more often your dog visits the clinic for positive experiences, the less the "vet office" becomes associated exclusively with scary procedures.`,
     };
 
     // Update guide content for each scenario (always update so deploys refresh content)
@@ -970,14 +969,14 @@ You don't need to train every step of every walk. But dedicated 5-10 minute trai
         [guideText, scenarioId]
       );
     }
-    console.log('â Scenario guides updated');
+    console.log('✅ Scenario guides updated');
 
-await client.query('COMMIT');
-    console.log('\nð All seed data inserted successfully!');
+    await client.query('COMMIT');
+    console.log('\n🎉 All seed data inserted successfully!');
     console.log('Admin login: Mikemelazzo@me.com / PositivePaws2024!');
   } catch (err) {
     await client.query('ROLLBACK');
-    console.error('â Seeding failed:', err);
+    console.error('❌ Seeding failed:', err);
     throw err;
   } finally {
     client.release();

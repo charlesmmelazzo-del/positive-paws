@@ -60,6 +60,7 @@ const Dashboard = () => {
     <div className="page">
       <div className="container" style={{ paddingTop: '40px', paddingBottom: '60px' }}>
 
+        {/* Greeting */}
         <div style={{ marginBottom: '36px' }}>
           <h1 style={{ fontSize: '32px', fontWeight: '700', marginBottom: '6px' }}>
             {getGreeting()}, {user?.name || 'Friend'}! 🐾
@@ -82,6 +83,7 @@ const Dashboard = () => {
           gap: '20px',
           marginBottom: '48px'
         }}>
+          {/* Start an Activity */}
           <div
             className="card card-clickable"
             onClick={() => navigate('/scenarios')}
@@ -123,6 +125,7 @@ const Dashboard = () => {
             </div>
           </div>
 
+          {/* Take a Course */}
           <div
             className="card card-clickable"
             onClick={() => navigate('/courses')}
@@ -164,6 +167,7 @@ const Dashboard = () => {
             </div>
           </div>
 
+          {/* My Dogs */}
           <div
             className="card card-clickable"
             onClick={() => navigate('/dogs')}
@@ -243,7 +247,7 @@ const Dashboard = () => {
           </div>
         )}
 
-        {/* Dogs Quick List */}
+        {/* My Dogs Quick List */}
         {dogs.length > 0 && (
           <div style={{ marginBottom: '32px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
@@ -255,14 +259,22 @@ const Dashboard = () => {
             <p style={{ color: 'var(--text-muted)', fontSize: '14px', marginBottom: '16px' }}>
               Click a dog to see their training sessions, success rates, and milestones.
             </p>
+
             <div style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))',
               gap: '16px'
             }}>
               {dogs.map(dog => (
-                <Link key={dog.id} to={`/dogs/${dog.id}`} style={{ textDecoration: 'none' }}>
-                  <div className="card card-clickable" style={{ padding: '20px', display: 'flex', alignItems: 'center', gap: '16px' }}>
+                <Link
+                  key={dog.id}
+                  to={`/dogs/${dog.id}`}
+                  style={{ textDecoration: 'none' }}
+                >
+                  <div
+                    className="card card-clickable"
+                    style={{ padding: '20px', display: 'flex', alignItems: 'center', gap: '16px' }}
+                  >
                     <div style={{
                       width: '52px',
                       height: '52px',

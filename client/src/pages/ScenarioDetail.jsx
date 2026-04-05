@@ -65,10 +65,14 @@ export default function ScenarioDetail() {
         behavior_tags: tags
       });
 
-      setSubmitMessage({ type: 'success', text: '✓ Training session logged! Great work.' });
+      setSubmitMessage({
+        type: 'success',
+        text: '✓ Training session logged! Great work.'
+      });
       setNotes('');
       setBehaviorTags('');
       setSuccessRating(0);
+
       setTimeout(() => setSubmitMessage(null), 4000);
     } catch (err) {
       setSubmitMessage({
@@ -116,9 +120,16 @@ export default function ScenarioDetail() {
   }
 
   const colorMap = {
-    orange: '#FFE8DF', yellow: '#FEF9C3', green: '#DCFCE7', pink: '#FCE7F3',
-    blue: '#DBEAFE', purple: '#F3E8FF', red: '#FEE2E2', teal: '#CCFBF1',
-    indigo: '#E0E7FF', cyan: '#CFFAFE'
+    orange: '#FFE8DF',
+    yellow: '#FEF9C3',
+    green: '#DCFCE7',
+    pink: '#FCE7F3',
+    blue: '#DBEAFE',
+    purple: '#F3E8FF',
+    red: '#FEE2E2',
+    teal: '#CCFBF1',
+    indigo: '#E0E7FF',
+    cyan: '#CFFAFE'
   };
 
   const tipsByType = {
@@ -129,55 +140,14 @@ export default function ScenarioDetail() {
   };
 
   const hasTips = tipsByType.do.length + tipsByType.dont.length + tipsByType.why.length + tipsByType.reward.length > 0;
-  const ratingLabels = ['', 'Needs work', 'Getting there', 'Good', 'Great', 'Excellent!'];
 
-  const TipSection = ({ tips, color, bg, border, label }) => {
-    if (!tips.length) return null;
-    return (
-      <div style={{ marginBottom: '1.5rem' }}>
-        <div style={{
-          display: 'inline-block', marginBottom: '12px', padding: '6px 16px',
-          background: color, borderRadius: '8px'
-        }}>
-          <span style={{ color: 'white', fontWeight: '700', fontSize: '13px', letterSpacing: '0.5px' }}>
-            {label}
-          </span>
-        </div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-          {tips.map((tip, i) => (
-            <div key={tip.id} style={{
-              display: 'flex', gap: '12px', alignItems: 'flex-start',
-              padding: '16px 20px', background: bg,
-              border: `1px solid ${border}`, borderLeft: `4px solid ${color}`,
-              borderRadius: '8px'
-            }}>
-              <span style={{
-                width: '24px', height: '24px', borderRadius: '50%', background: color,
-                color: 'white', fontSize: '12px', fontWeight: '700',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                flexShrink: 0, marginTop: '1px'
-              }}>{i + 1}</span>
-              <div>
-                {tip.tip_title && (
-                  <p style={{ fontWeight: '700', margin: '0 0 4px 0', fontSize: '15px' }}>
-                    {tip.tip_title}
-                  </p>
-                )}
-                <p style={{ margin: 0, lineHeight: '1.6', fontSize: '14px' }}>
-                  {tip.tip_text}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  };
+  const ratingLabels = ['', 'Needs work', 'Getting there', 'Good', 'Great', 'Excellent!'];
 
   return (
     <div className="page">
       <div className="container" style={{ maxWidth: '780px' }}>
 
+        {/* Back Button */}
         <button
           onClick={() => navigate('/scenarios')}
           className="btn btn-outline btn-sm"
@@ -186,17 +156,27 @@ export default function ScenarioDetail() {
           ← Back to Activities
         </button>
 
-        {/* Header */}
+        {/* Scenario Header */}
         <div style={{
-          display: 'flex', gap: '1.5rem', alignItems: 'flex-start',
-          marginBottom: '2.5rem', padding: '2rem',
+          display: 'flex',
+          gap: '1.5rem',
+          alignItems: 'flex-start',
+          marginBottom: '2.5rem',
+          padding: '2rem',
           backgroundColor: colorMap[scenario.color] || '#EFF6FF',
-          borderRadius: 'var(--radius)', border: '1px solid rgba(0,0,0,0.06)'
+          borderRadius: 'var(--radius)',
+          border: '1px solid rgba(0,0,0,0.06)'
         }}>
           <div style={{
-            width: '100px', height: '100px', backgroundColor: 'white',
-            borderRadius: '16px', display: 'flex', alignItems: 'center',
-            justifyContent: 'center', fontSize: '3.5rem', flexShrink: 0,
+            width: '100px',
+            height: '100px',
+            backgroundColor: 'white',
+            borderRadius: '16px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: '3.5rem',
+            flexShrink: 0,
             boxShadow: '0 2px 8px rgba(0,0,0,0.08)'
           }}>
             {scenario.icon}
@@ -211,12 +191,11 @@ export default function ScenarioDetail() {
           </div>
         </div>
 
-        {/* Tips */}
         {/* Training Guide */}
         {scenario.guide && (
           <div style={{ marginBottom: '3rem' }}>
             <h2 style={{ fontSize: '22px', fontWeight: '700', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              ð Training Guide
+              📖 Training Guide
             </h2>
             <div style={{
               background: 'linear-gradient(135deg, #F8F7FF 0%, #F0F9FF 100%)',
@@ -246,7 +225,7 @@ export default function ScenarioDetail() {
                       marginTop: '2px'
                     }}>{i + 1}</span>
                     <span style={{ color: '#1E1B4B', lineHeight: '1.65', fontSize: '14.5px' }}>
-                      {line.replace(/^â¢\s*/, '')}
+                      {line.replace(/^•\s*/, '')}
                     </span>
                   </li>
                 ))}
@@ -255,25 +234,257 @@ export default function ScenarioDetail() {
           </div>
         )}
 
+        {/* Training Tips */}
         {hasTips && (
           <div style={{ marginBottom: '3rem' }}>
-            <h2 style={{ fontSize: '22px', fontWeight: '700', marginBottom: '1.5rem' }}>
+            <h2 style={{ fontSize: '22px', fontWeight: '700', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
               💡 Training Tips
             </h2>
-            <TipSection tips={tipsByType.do} color="#15803D" bg="#F0FDF4" border="#BBF7D0" label="✅ WHAT TO DO" />
-            <TipSection tips={tipsByType.dont} color="#B91C1C" bg="#FEF2F2" border="#FECACA" label="❌ WHAT TO AVOID" />
-            <TipSection tips={tipsByType.why} color="#0369A1" bg="#F0F9FF" border="#BAE6FD" label="🧠 WHY IT WORKS" />
-            <TipSection tips={tipsByType.reward} color="#B45309" bg="#FFFBEB" border="#FDE68A" label="🎁 REWARD STRATEGY" />
+
+            {/* DO Section */}
+            {tipsByType.do.length > 0 && (
+              <div style={{ marginBottom: '1.5rem' }}>
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  marginBottom: '12px',
+                  padding: '8px 16px',
+                  background: '#15803D',
+                  borderRadius: '8px',
+                  width: 'fit-content'
+                }}>
+                  <span style={{ color: 'white', fontWeight: '700', fontSize: '14px', letterSpacing: '0.5px' }}>
+                    ✅ WHAT TO DO
+                  </span>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                  {tipsByType.do.map((tip, i) => (
+                    <div key={tip.id} style={{
+                      display: 'flex',
+                      gap: '12px',
+                      alignItems: 'flex-start',
+                      padding: '16px 20px',
+                      background: '#F0FDF4',
+                      border: '1px solid #BBF7D0',
+                      borderLeft: '4px solid #15803D',
+                      borderRadius: '8px'
+                    }}>
+                      <span style={{
+                        width: '24px',
+                        height: '24px',
+                        borderRadius: '50%',
+                        background: '#15803D',
+                        color: 'white',
+                        fontSize: '12px',
+                        fontWeight: '700',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        flexShrink: 0,
+                        marginTop: '1px'
+                      }}>{i + 1}</span>
+                      <div>
+                        {tip.tip_title && (
+                          <p style={{ fontWeight: '700', margin: '0 0 4px 0', color: '#14532D', fontSize: '15px' }}>
+                            {tip.tip_title}
+                          </p>
+                        )}
+                        <p style={{ margin: 0, color: '#166534', lineHeight: '1.6', fontSize: '14px' }}>
+                          {tip.tip_text}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* DON'T Section */}
+            {tipsByType.dont.length > 0 && (
+              <div style={{ marginBottom: '1.5rem' }}>
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  marginBottom: '12px',
+                  padding: '8px 16px',
+                  background: '#B91C1C',
+                  borderRadius: '8px',
+                  width: 'fit-content'
+                }}>
+                  <span style={{ color: 'white', fontWeight: '700', fontSize: '14px', letterSpacing: '0.5px' }}>
+                    ❌ WHAT TO AVOID
+                  </span>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                  {tipsByType.dont.map((tip, i) => (
+                    <div key={tip.id} style={{
+                      display: 'flex',
+                      gap: '12px',
+                      alignItems: 'flex-start',
+                      padding: '16px 20px',
+                      background: '#FEF2F2',
+                      border: '1px solid #FECACA',
+                      borderLeft: '4px solid #B91C1C',
+                      borderRadius: '8px'
+                    }}>
+                      <span style={{
+                        width: '24px',
+                        height: '24px',
+                        borderRadius: '50%',
+                        background: '#B91C1C',
+                        color: 'white',
+                        fontSize: '12px',
+                        fontWeight: '700',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        flexShrink: 0,
+                        marginTop: '1px'
+                      }}>{i + 1}</span>
+                      <div>
+                        {tip.tip_title && (
+                          <p style={{ fontWeight: '700', margin: '0 0 4px 0', color: '#7F1D1D', fontSize: '15px' }}>
+                            {tip.tip_title}
+                          </p>
+                        )}
+                        <p style={{ margin: 0, color: '#991B1B', lineHeight: '1.6', fontSize: '14px' }}>
+                          {tip.tip_text}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* WHY IT WORKS Section */}
+            {tipsByType.why.length > 0 && (
+              <div style={{ marginBottom: '1.5rem' }}>
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  marginBottom: '12px',
+                  padding: '8px 16px',
+                  background: '#0369A1',
+                  borderRadius: '8px',
+                  width: 'fit-content'
+                }}>
+                  <span style={{ color: 'white', fontWeight: '700', fontSize: '14px', letterSpacing: '0.5px' }}>
+                    🧠 WHY IT WORKS
+                  </span>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                  {tipsByType.why.map((tip, i) => (
+                    <div key={tip.id} style={{
+                      display: 'flex',
+                      gap: '12px',
+                      alignItems: 'flex-start',
+                      padding: '16px 20px',
+                      background: '#F0F9FF',
+                      border: '1px solid #BAE6FD',
+                      borderLeft: '4px solid #0369A1',
+                      borderRadius: '8px'
+                    }}>
+                      <span style={{
+                        width: '24px',
+                        height: '24px',
+                        borderRadius: '50%',
+                        background: '#0369A1',
+                        color: 'white',
+                        fontSize: '12px',
+                        fontWeight: '700',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        flexShrink: 0,
+                        marginTop: '1px'
+                      }}>{i + 1}</span>
+                      <div>
+                        {tip.tip_title && (
+                          <p style={{ fontWeight: '700', margin: '0 0 4px 0', color: '#0C4A6E', fontSize: '15px' }}>
+                            {tip.tip_title}
+                          </p>
+                        )}
+                        <p style={{ margin: 0, color: '#075985', lineHeight: '1.6', fontSize: '14px' }}>
+                          {tip.tip_text}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* REWARD TIPS Section */}
+            {tipsByType.reward.length > 0 && (
+              <div style={{ marginBottom: '1.5rem' }}>
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  marginBottom: '12px',
+                  padding: '8px 16px',
+                  background: '#B45309',
+                  borderRadius: '8px',
+                  width: 'fit-content'
+                }}>
+                  <span style={{ color: 'white', fontWeight: '700', fontSize: '14px', letterSpacing: '0.5px' }}>
+                    🎁 REWARD STRATEGY
+                  </span>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                  {tipsByType.reward.map((tip, i) => (
+                    <div key={tip.id} style={{
+                      display: 'flex',
+                      gap: '12px',
+                      alignItems: 'flex-start',
+                      padding: '16px 20px',
+                      background: '#FFFBEB',
+                      border: '1px solid #FDE68A',
+                      borderLeft: '4px solid #B45309',
+                      borderRadius: '8px'
+                    }}>
+                      <span style={{
+                        width: '24px',
+                        height: '24px',
+                        borderRadius: '50%',
+                        background: '#B45309',
+                        color: 'white',
+                        fontSize: '12px',
+                        fontWeight: '700',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        flexShrink: 0,
+                        marginTop: '1px'
+                      }}>{i + 1}</span>
+                      <div>
+                        {tip.tip_title && (
+                          <p style={{ fontWeight: '700', margin: '0 0 4px 0', color: '#78350F', fontSize: '15px' }}>
+                            {tip.tip_title}
+                          </p>
+                        )}
+                        <p style={{ margin: 0, color: '#92400E', lineHeight: '1.6', fontSize: '14px' }}>
+                          {tip.tip_text}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         )}
 
+        {/* Divider */}
         <div style={{ borderTop: '2px solid var(--border)', marginBottom: '2.5rem' }}></div>
 
-        {/* Log Session Form */}
+        {/* Log Training Session Form */}
         <div className="card" style={{ marginBottom: '2rem', padding: '2rem' }}>
-          <h2 style={{ marginTop: 0, marginBottom: '6px', fontSize: '22px' }}>
-            📋 Log This Session
-          </h2>
+          <h2 style={{ marginTop: 0, marginBottom: '6px', fontSize: '22px' }}>📋 Log This Session</h2>
           <p style={{ color: 'var(--text-muted)', fontSize: '14px', marginBottom: '1.5rem' }}>
             Record how training went so you can track progress over time.
           </p>
@@ -286,6 +497,7 @@ export default function ScenarioDetail() {
           )}
 
           <form onSubmit={handleSubmitLog}>
+            {/* Dog Selection */}
             <div className="input-group" style={{ marginBottom: '1.5rem' }}>
               <label htmlFor="dog-select" style={{ display: 'block', fontWeight: '600', marginBottom: '0.5rem' }}>
                 Which dog? *
@@ -312,6 +524,7 @@ export default function ScenarioDetail() {
               )}
             </div>
 
+            {/* Success Rating */}
             <div className="input-group" style={{ marginBottom: '1.5rem' }}>
               <label style={{ display: 'block', fontWeight: '600', marginBottom: '0.5rem' }}>
                 How did it go? *
@@ -323,8 +536,11 @@ export default function ScenarioDetail() {
                     type="button"
                     onClick={() => setSuccessRating(rating)}
                     style={{
-                      fontSize: '2rem', backgroundColor: 'transparent', border: 'none',
-                      cursor: 'pointer', opacity: rating <= successRating ? 1 : 0.25,
+                      fontSize: '2rem',
+                      backgroundColor: 'transparent',
+                      border: 'none',
+                      cursor: 'pointer',
+                      opacity: rating <= successRating ? 1 : 0.25,
                       transform: rating <= successRating ? 'scale(1.1)' : 'scale(1)',
                       transition: 'all 0.15s'
                     }}
@@ -333,13 +549,19 @@ export default function ScenarioDetail() {
                   </button>
                 ))}
                 {successRating > 0 && (
-                  <span style={{ marginLeft: '8px', color: 'var(--text-muted)', fontSize: '14px', fontWeight: '600' }}>
+                  <span style={{
+                    marginLeft: '8px',
+                    color: 'var(--text-muted)',
+                    fontSize: '14px',
+                    fontWeight: '600'
+                  }}>
                     {ratingLabels[successRating]}
                   </span>
                 )}
               </div>
             </div>
 
+            {/* Notes */}
             <div className="input-group" style={{ marginBottom: '1.5rem' }}>
               <label htmlFor="notes" style={{ display: 'block', fontWeight: '600', marginBottom: '0.5rem' }}>
                 Notes <span style={{ color: 'var(--text-muted)', fontWeight: '400' }}>(optional)</span>
@@ -354,6 +576,7 @@ export default function ScenarioDetail() {
               />
             </div>
 
+            {/* Behavior Tags */}
             <div className="input-group" style={{ marginBottom: '1.5rem' }}>
               <label htmlFor="tags" style={{ display: 'block', fontWeight: '600', marginBottom: '0.5rem' }}>
                 Behavior tags <span style={{ color: 'var(--text-muted)', fontWeight: '400' }}>(optional, comma-separated)</span>
@@ -369,6 +592,7 @@ export default function ScenarioDetail() {
               />
             </div>
 
+            {/* Submit */}
             <button
               type="submit"
               className="btn btn-primary"

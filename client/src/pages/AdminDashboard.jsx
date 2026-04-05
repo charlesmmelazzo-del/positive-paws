@@ -46,17 +46,37 @@ export default function AdminDashboard() {
 
   const handleRoleChange = async (userId, newRole) => {
     if (user?.id === userId) {
-      setActionMessage({ type: 'error', text: 'You cannot change your own role' });
+      setActionMessage({
+        type: 'error',
+        text: 'You cannot change your own role'
+      });
       return;
     }
+
     try {
       setActingUserId(userId);
-      await api.put(`/admin/users/${userId}/role`, { role: newRole });
-      setUsers(prevUsers => prevUsers.map(u => u.id === userId ? { ...u, role: newRole } : u));
-      setActionMessage({ type: 'success', text: `✓ User role updated to ${newRole}` });
+      await api.put(`/admin/users/${userId}/role`, {
+        role: newRole
+      });
+
+      setUsers(prevUsers =>
+        prevUsers.map(u =>
+          u.id === userId ? { ...u, role: newRole } : u
+        )
+      );
+
+      setActionMessage({
+        type: 'success',
+        text: `✓ User role updated to ${newRole}`
+      });
+
       setTimeout(() => setActionMessage(null), 3000);
     } catch (err) {
-      setActionMessage({ type: 'error', text: err.response?.data?.error || 'Failed to update user role' });
+      setActionMessage({
+        type: 'error',
+        text: err.response?.data?.error || 'Failed to update user role'
+      });
+      console.error('Error updating role:', err);
     } finally {
       setActingUserId(null);
     }
@@ -104,21 +124,36 @@ export default function AdminDashboard() {
 
   const handleDeleteUser = async (userId) => {
     if (user?.id === userId) {
-      setActionMessage({ type: 'error', text: 'You cannot delete your own account' });
+      setActionMessage({
+        type: 'error',
+        text: 'You cannot delete your own account'
+      });
       return;
     }
+
     const userToDelete = users.find(u => u.id === userId);
     if (!window.confirm(`Are you sure you want to delete ${userToDelete?.name}? This action cannot be undone.`)) {
       return;
     }
+
     try {
       setActingUserId(userId);
       await api.delete(`/admin/users/${userId}`);
+
       setUsers(prevUsers => prevUsers.filter(u => u.id !== userId));
-      setActionMessage({ type: 'success', text: '✓ User deleted successfully' });
+
+      setActionMessage({
+        type: 'success',
+        text: '✓ User deleted successfully'
+      });
+
       setTimeout(() => setActionMessage(null), 3000);
     } catch (err) {
-      setActionMessage({ type: 'error', text: err.response?.data?.error || 'Failed to delete user' });
+      setActionMessage({
+        type: 'error',
+        text: err.response?.data?.error || 'Failed to delete user'
+      });
+      console.error('Error deleting user:', err);
     } finally {
       setActingUserId(null);
     }
@@ -140,7 +175,9 @@ export default function AdminDashboard() {
       <div className="page">
         <div className="container">
           <div className="alert alert-error">{error}</div>
-          <button onClick={fetchDashboardData} className="btn btn-secondary">Try Again</button>
+          <button onClick={fetchDashboardData} className="btn btn-secondary">
+            Try Again
+          </button>
         </div>
       </div>
     );
@@ -149,6 +186,7 @@ export default function AdminDashboard() {
   return (
     <div className="page">
       <div className="container">
+        {/* Header */}
         <div style={{ marginBottom: '2rem' }}>
           <h1 style={{ marginBottom: '0.5rem' }}>🛠️ Admin Dashboard</h1>
           <p style={{ color: 'var(--text-muted)', margin: 0 }}>
@@ -167,20 +205,36 @@ export default function AdminDashboard() {
         {stats && (
           <div className="grid-4" style={{ marginBottom: '3rem' }}>
             <div className="card" style={{ textAlign: 'center' }}>
-              <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', margin: '0 0 0.5rem 0' }}>Total Users</p>
-              <p style={{ fontSize: '2.5rem', fontWeight: 'bold', margin: 0, color: 'var(--primary)' }}>{stats.total_users}</p>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', margin: '0 0 0.5rem 0' }}>
+                Total Users
+              </p>
+              <p style={{ fontSize: '2.5rem', fontWeight: 'bold', margin: 0, color: 'var(--primary)' }}>
+                {stats.total_users}
+              </p>
             </div>
             <div className="card" style={{ textAlign: 'center' }}>
-              <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', margin: '0 0 0.5rem 0' }}>Total Dogs</p>
-              <p style={{ fontSize: '2.5rem', fontWeight: 'bold', margin: 0, color: 'var(--primary)' }}>{stats.total_dogs}</p>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', margin: '0 0 0.5rem 0' }}>
+                Total Dogs
+              </p>
+              <p style={{ fontSize: '2.5rem', fontWeight: 'bold', margin: 0, color: 'var(--primary)' }}>
+                {stats.total_dogs}
+              </p>
             </div>
             <div className="card" style={{ textAlign: 'center' }}>
-              <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', margin: '0 0 0.5rem 0' }}>Training Sessions</p>
-              <p style={{ fontSize: '2.5rem', fontWeight: 'bold', margin: 0, color: 'var(--primary)' }}>{stats.training_sessions}</p>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', margin: '0 0 0.5rem 0' }}>
+                Training Sessions
+              </p>
+              <p style={{ fontSize: '2.5rem', fontWeight: 'bold', margin: 0, color: 'var(--primary)' }}>
+                {stats.training_sessions}
+              </p>
             </div>
             <div className="card" style={{ textAlign: 'center' }}>
-              <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', margin: '0 0 0.5rem 0' }}>Lesson Completions</p>
-              <p style={{ fontSize: '2.5rem', fontWeight: 'bold', margin: 0, color: 'var(--primary)' }}>{stats.lesson_completions}</p>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', margin: '0 0 0.5rem 0' }}>
+                Lesson Completions
+              </p>
+              <p style={{ fontSize: '2.5rem', fontWeight: 'bold', margin: 0, color: 'var(--primary)' }}>
+                {stats.lesson_completions}
+              </p>
             </div>
           </div>
         )}
@@ -202,22 +256,44 @@ export default function AdminDashboard() {
               <div className="grid-2" style={{ gap: '1rem', marginBottom: '1rem' }}>
                 <div>
                   <label className="label">Name</label>
-                  <input className="input" type="text" placeholder="Full name" value={createForm.name}
-                    onChange={e => setCreateForm(f => ({ ...f, name: e.target.value }))} required />
+                  <input
+                    className="input"
+                    type="text"
+                    placeholder="Full name"
+                    value={createForm.name}
+                    onChange={e => setCreateForm(f => ({ ...f, name: e.target.value }))}
+                    required
+                  />
                 </div>
                 <div>
                   <label className="label">Email</label>
-                  <input className="input" type="email" placeholder="email@example.com" value={createForm.email}
-                    onChange={e => setCreateForm(f => ({ ...f, email: e.target.value }))} required />
+                  <input
+                    className="input"
+                    type="email"
+                    placeholder="email@example.com"
+                    value={createForm.email}
+                    onChange={e => setCreateForm(f => ({ ...f, email: e.target.value }))}
+                    required
+                  />
                 </div>
                 <div>
                   <label className="label">Password</label>
-                  <input className="input" type="password" placeholder="Min. 6 characters" value={createForm.password}
-                    onChange={e => setCreateForm(f => ({ ...f, password: e.target.value }))} required />
+                  <input
+                    className="input"
+                    type="password"
+                    placeholder="Min. 6 characters"
+                    value={createForm.password}
+                    onChange={e => setCreateForm(f => ({ ...f, password: e.target.value }))}
+                    required
+                  />
                 </div>
                 <div>
                   <label className="label">Role</label>
-                  <select className="input" value={createForm.role} onChange={e => setCreateForm(f => ({ ...f, role: e.target.value }))}>
+                  <select
+                    className="input"
+                    value={createForm.role}
+                    onChange={e => setCreateForm(f => ({ ...f, role: e.target.value }))}
+                  >
                     <option value="user">User</option>
                     <option value="admin">Admin</option>
                   </select>
@@ -235,10 +311,15 @@ export default function AdminDashboard() {
           <h2 style={{ marginTop: 0, marginBottom: '1.5rem' }}>👥 Users</h2>
 
           {users.length === 0 ? (
-            <p style={{ color: 'var(--text-muted)', textAlign: 'center' }}>No users found</p>
+            <p style={{ color: 'var(--text-muted)', textAlign: 'center' }}>
+              No users found
+            </p>
           ) : (
             <div style={{ overflowX: 'auto' }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+              <table style={{
+                width: '100%',
+                borderCollapse: 'collapse'
+              }}>
                 <thead>
                   <tr style={{ borderBottom: '2px solid var(--border)' }}>
                     <th style={{ textAlign: 'left', padding: '1rem', fontWeight: '600' }}>ID</th>
@@ -253,56 +334,106 @@ export default function AdminDashboard() {
                   {users.map((userItem) => {
                     const isCurrentUser = user?.id === userItem.id;
                     const createdDate = new Date(userItem.created_at).toLocaleDateString('en-US', {
-                      year: 'numeric', month: 'short', day: 'numeric'
+                      year: 'numeric',
+                      month: 'short',
+                      day: 'numeric'
                     });
+
                     return (
-                      <tr key={userItem.id} style={{
-                        borderBottom: '1px solid var(--border)',
-                        backgroundColor: isCurrentUser ? 'var(--bg)' : 'transparent',
-                        opacity: actingUserId === userItem.id ? 0.6 : 1
-                      }}>
+                      <tr
+                        key={userItem.id}
+                        style={{
+                          borderBottom: '1px solid var(--border)',
+                          backgroundColor: isCurrentUser ? 'var(--bg)' : 'transparent',
+                          opacity: actingUserId === userItem.id ? 0.6 : 1
+                        }}
+                      >
                         <td style={{ padding: '1rem', fontFamily: 'monospace', fontSize: '0.85rem' }}>
-                          {String(userItem.id).substring(0, 8)}
+                          {userItem.id.substring(0, 8)}
                         </td>
                         <td style={{ padding: '1rem' }}>
                           {userItem.name}
-                          {isCurrentUser && <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}> (you)</span>}
+                          {isCurrentUser && (
+                            <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}> (you)</span>
+                          )}
                         </td>
-                        <td style={{ padding: '1rem', fontSize: '0.9rem' }}>{userItem.email}</td>
+                        <td style={{ padding: '1rem', fontSize: '0.9rem' }}>
+                          {userItem.email}
+                        </td>
                         <td style={{ padding: '1rem', textAlign: 'center' }}>
                           <span className={`badge ${userItem.role === 'admin' ? 'badge-red' : 'badge-blue'}`}>
                             {userItem.role}
                           </span>
                         </td>
-                        <td style={{ padding: '1rem', fontSize: '0.9rem', color: 'var(--text-muted)' }}>{createdDate}</td>
+                        <td style={{ padding: '1rem', fontSize: '0.9rem', color: 'var(--text-muted)' }}>
+                          {createdDate}
+                        </td>
                         <td style={{ padding: '1rem' }}>
                           <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-                            <button className="btn btn-outline btn-sm"
-                              onClick={() => handleRoleChange(userItem.id, userItem.role === 'admin' ? 'user' : 'admin')}
+                            {/* Role Toggle Button */}
+                            <button
+                              className="btn btn-outline btn-sm"
+                              onClick={() =>
+                                handleRoleChange(
+                                  userItem.id,
+                                  userItem.role === 'admin' ? 'user' : 'admin'
+                                )
+                              }
                               disabled={isCurrentUser || actingUserId === userItem.id}
-                              style={{ opacity: isCurrentUser ? 0.5 : 1, cursor: isCurrentUser ? 'not-allowed' : 'pointer' }}
-                              title={isCurrentUser ? 'Cannot change your own role' : ''}>
+                              style={{
+                                opacity: isCurrentUser ? 0.5 : 1,
+                                cursor: isCurrentUser ? 'not-allowed' : 'pointer'
+                              }}
+                              title={isCurrentUser ? 'Cannot change your own role' : ''}
+                            >
                               {userItem.role === 'admin' ? 'Make User' : 'Make Admin'}
                             </button>
-                            <button className="btn btn-outline btn-sm"
-                              onClick={() => { setResetUserId(resetUserId === userItem.id ? null : userItem.id); setResetPassword(''); }}
-                              disabled={actingUserId === userItem.id}>
+
+                            {/* Reset Password Button */}
+                            <button
+                              className="btn btn-outline btn-sm"
+                              onClick={() => {
+                                setResetUserId(resetUserId === userItem.id ? null : userItem.id);
+                                setResetPassword('');
+                              }}
+                              disabled={actingUserId === userItem.id}
+                            >
                               Reset Pwd
                             </button>
-                            <button className="btn btn-outline btn-sm"
-                              style={{ color: '#DC2626', borderColor: '#DC2626', opacity: isCurrentUser ? 0.5 : 1, cursor: isCurrentUser ? 'not-allowed' : 'pointer' }}
+
+                            {/* Delete Button */}
+                            <button
+                              className="btn btn-outline btn-sm"
+                              style={{
+                                color: '#DC2626',
+                                borderColor: '#DC2626',
+                                opacity: isCurrentUser ? 0.5 : 1,
+                                cursor: isCurrentUser ? 'not-allowed' : 'pointer'
+                              }}
                               onClick={() => handleDeleteUser(userItem.id)}
                               disabled={isCurrentUser || actingUserId === userItem.id}
-                              title={isCurrentUser ? 'Cannot delete your own account' : ''}>
+                              title={isCurrentUser ? 'Cannot delete your own account' : ''}
+                            >
                               Delete
                             </button>
                           </div>
+
+                          {/* Inline reset password form */}
                           {resetUserId === userItem.id && (
-                            <div style={{ marginTop: '0.75rem', display: 'flex', gap: '0.5rem', alignItems: 'center', justifyContent: 'center' }}>
-                              <input className="input" type="password" placeholder="New password" value={resetPassword}
+                            <div style={{ marginTop: '0.75rem', display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                              <input
+                                className="input"
+                                type="password"
+                                placeholder="New password"
+                                value={resetPassword}
                                 onChange={e => setResetPassword(e.target.value)}
-                                style={{ fontSize: '0.85rem', padding: '0.35rem 0.6rem', maxWidth: '160px' }} />
-                              <button className="btn btn-primary btn-sm" onClick={() => handleResetPassword(userItem.id)} disabled={resetLoading}>
+                                style={{ fontSize: '0.85rem', padding: '0.35rem 0.6rem', maxWidth: '160px' }}
+                              />
+                              <button
+                                className="btn btn-primary btn-sm"
+                                onClick={() => handleResetPassword(userItem.id)}
+                                disabled={resetLoading}
+                              >
                                 {resetLoading ? '...' : 'Save'}
                               </button>
                             </div>
