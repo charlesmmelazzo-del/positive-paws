@@ -1060,6 +1060,238 @@ If you've worked through all four courses, you have a solid understanding of how
 
 
 
+    // ─── Lessons for Course 4: Advanced Real-World Training ───────────────────
+    const course4Lessons = [
+      {
+        title: 'Training in Real Environments',
+        content: `## Taking Your Training Off the Mat
+
+Most training starts in the living room — low distraction, familiar surroundings, a willing dog. But the real world is nothing like your living room. Cars backfire. Squirrels sprint. Children scream. Other dogs appear out of nowhere. This lesson is about bridging the gap between training sessions and real life.
+
+### Why Dogs Struggle Outdoors
+
+A dog who sits perfectly at home may blow you off completely at the park. This isn't disobedience — it's a failure to generalize. Dogs are highly context-specific learners. They don't automatically transfer a behavior from one environment to another; you have to teach it in each new context.
+
+This is sometimes called "stimulus control breakdown." The dog has learned to sit when you say "sit" in the kitchen, with no competing distractions, with treats on the counter. Take any of those variables away and the behavior degrades.
+
+### The Three-Phase Approach
+
+**Phase 1: Foundation (controlled environment)**
+Build the behavior to fluency in a low-distraction environment. The dog should be responding reliably — about 90% of the time — before you add any difficulty.
+
+**Phase 2: Proofing (introduce variables one at a time)**
+Add distance, then duration, then distraction — but never more than one at a time. If you add distance and distraction simultaneously, you're setting the dog up to fail.
+
+**Phase 3: Generalization (new environments)**
+Practice in new locations systematically. Start with slightly more distracting environments (quiet neighborhood, empty parking lot) before moving to highly distracting ones (busy park, pet store).
+
+### Practical Tips for Real-World Training
+
+- **Go below threshold**: In a new environment, temporarily lower your criteria. Ask for easier behaviors than you would at home.
+- **High-value rewards**: Real-world distractions are powerful. Your treat needs to compete. Use real meat, cheese, or whatever your dog finds irresistible.
+- **Short sessions**: 3–5 minutes of focused training in a new environment beats 30 minutes of struggling.
+- **End on success**: Always finish with something the dog does easily so they leave the environment on a positive note.
+- **Increase gradually**: Don't jump from the living room to the dog park. Build up: driveway → quiet street → park edge → park interior.`,
+        key_takeaway: 'Behaviors learned at home don\'t automatically transfer to new environments. Generalization must be trained systematically by practicing in progressively more distracting locations, one variable at a time.',
+        order_index: 0,
+        reading_time_minutes: 10,
+      },
+      {
+        title: 'Managing Multi-Dog Households',
+        content: `## When You Have More Than One Dog
+
+Training one dog is challenging. Training two or more — especially with different temperaments, ages, and training histories — adds an entirely new layer of complexity. This lesson covers how to manage and train a multi-dog household successfully.
+
+### The Core Challenge: Competing for Resources
+
+Most conflict in multi-dog homes comes down to resources: food, space, attention, toys, resting spots. Dogs don't share naturally — they negotiate through body language and, sometimes, conflict. Your job is to manage resources strategically so conflict doesn't arise.
+
+**Key resource-management rules:**
+- Feed dogs separately — in different rooms or with barriers — to prevent food guarding
+- Give high-value chews (bones, Kongs) with dogs separated
+- Have enough resting spots that no one needs to compete
+- Greet and give attention to dogs individually, not as a group
+
+### Training Dogs Individually First
+
+Every dog in the household needs individual training time. If you always train them together, they'll learn to work as a pack — not independently. One dog who knows a command will cue the other to respond, and you'll never know if each dog truly understands the behavior.
+
+**The rule:** Get each behavior to 90% reliability with each dog alone before training them together.
+
+### Managing the Chaos of Group Training
+
+Once dogs are individually reliable, you can begin training them together. Start with management:
+
+1. **One dog on leash, one free** — work the leashed dog while the other is nearby but not interfering
+2. **Both on leash** — practice sits, stays, and place behaviors with both dogs simultaneously
+3. **Take turns** — cue Dog A, reward, then cue Dog B, reward. This teaches patience and impulse control.
+
+### Introducing a New Dog
+
+When adding a dog to the household, go slowly. The existing dog(s) should meet the newcomer on neutral ground (not at home), on leash, in parallel — walking together before greeting face to face. Don't force it. Let them set the pace.
+
+For the first few weeks at home, manage carefully: separate feeding, supervised greetings, crates or gates when unsupervised. Most dogs take 2–3 weeks to settle into a new household dynamic.`,
+        key_takeaway: 'Multi-dog homes require strategic resource management to prevent conflict, and each dog must be trained individually before group training begins. Slow, supervised introductions are essential when adding a new dog.',
+        order_index: 1,
+        reading_time_minutes: 11,
+      },
+      {
+        title: 'Working Through Distractions',
+        content: `## Teaching Your Dog to Focus When It Counts
+
+Distractions are everywhere — other dogs, people, food on the ground, wildlife, traffic, children. A dog who can focus and respond to cues despite distractions is a genuinely well-trained dog. This lesson gives you a systematic approach.
+
+### Understanding Threshold
+
+"Threshold" refers to the point at which a dog becomes too aroused or anxious to think clearly and respond to training. When a dog is over threshold, the thinking brain essentially shuts down and instinct takes over.
+
+Signs a dog is at or over threshold:
+- Lunging, barking, whining
+- Hard staring at the distraction
+- Unable to take treats they normally love
+- Ignoring their name or known cues
+
+**The goal of distraction training is to work just below threshold** — close enough to the distraction that the dog notices it, but not so close they lose their mind.
+
+### The Distraction Hierarchy
+
+Not all distractions are equal. Build a rough hierarchy for your dog:
+
+Low: a person walking by → Medium: another dog at a distance → High: a squirrel running → Extreme: food dropped on the ground
+
+Start your distraction training at the LOW end and work up systematically. Never jump to high-level distractions before the dog is solid at lower levels.
+
+### Look at That (LAT)
+
+One of the most effective techniques for distraction training is "Look at That" (Leslie McDevitt, Control Unleashed). Instead of asking the dog to ignore the distraction, you mark and reward the dog FOR noticing it.
+
+How it works:
+1. Dog sees distraction → mark ("yes!") → reward
+2. Dog looks at distraction → looks back at you → jackpot reward
+3. Eventually: dog sees distraction → automatically looks at you
+
+This technique changes the emotional response to the distraction. The dog learns that seeing the distraction predicts rewards — and starts looking to you for guidance rather than reacting.
+
+### Engagement Games
+
+Building engagement — your dog's desire to check in with you — is the foundation of distraction proofing. Practice these:
+
+- **Hand targeting**: dog touches your palm with their nose on cue, even near distractions
+- **Name game**: say dog's name, mark and reward when they look at you — build this in increasingly distracting environments
+- **Ready?**: use an attention cue before asking for any behavior in a distracting environment`,
+        key_takeaway: 'Distraction training requires working below the dog\'s threshold and building up gradually. Techniques like "Look at That" change the emotional response to distractions — turning triggers into cues to check in with you.',
+        order_index: 2,
+        reading_time_minutes: 10,
+      },
+      {
+        title: 'Building a Reliable, Confident Dog',
+        content: `## The Long Game: Training for Life
+
+A well-trained dog isn't just a dog who knows commands — it's a dog who is confident, emotionally resilient, and genuinely enjoys working with you. This final lesson is about the bigger picture: building a dog you can take anywhere and trust in any situation.
+
+### Confidence vs. Obedience
+
+Traditional training focused almost exclusively on obedience: sit, stay, come, down, heel. But a dog can know all those commands and still be anxious, reactive, or unreliable under pressure.
+
+Real reliability comes from confidence — a dog who trusts that the world is safe, that new experiences are interesting rather than threatening, and that you are a reliable guide through it all.
+
+**How to build confidence:**
+- Expose to novelty early and often (new surfaces, sounds, environments, people)
+- Let the dog problem-solve — don't over-help or rush to rescue them from minor challenges
+- Use play as a training tool — a dog who plays with you in a new environment is a confident dog
+- Celebrate "brave" moments: when your dog approaches something unfamiliar, mark and reward generously
+
+### The Relationship Is the Foundation
+
+Every technique in this program works better on a foundation of a strong relationship. A dog who trusts you, enjoys your company, and finds working with you rewarding will forgive your training mistakes — and there will be mistakes.
+
+Build the relationship by:
+- Playing with your dog regularly, not just training
+- Keeping training sessions fun and ending before the dog is tired or frustrated
+- Reading your dog's body language and respecting what they're telling you
+- Being the predictor of good things — your presence should reliably signal safety and reward
+
+### Maintenance Training
+
+Training is never "done." Behaviors that aren't practiced will fade — especially under real-world pressure. Maintenance training means:
+
+- Practicing known behaviors in new environments regularly
+- Doing brief "tune-up" sessions when you notice a behavior degrading
+- Keeping recalls sharp with surprise jackpot rewards even when you don't "need" them
+- Continuing to add new behaviors throughout the dog's life — mental stimulation matters
+
+### You've Come a Long Way
+
+If you've worked through all four courses, you have a solid understanding of how dogs learn, how to communicate clearly, how to train foundational and advanced skills, and how to apply all of it in the real world. The most important thing now is consistency — show up, keep it positive, and enjoy your dog.`,
+        key_takeaway: 'True reliability comes from a confident, emotionally resilient dog who has a strong relationship with their owner. Maintenance training throughout the dog\'s life keeps skills sharp and the bond strong.',
+        order_index: 3,
+        reading_time_minutes: 10,
+      },
+    ];
+
+    for (const lesson of course4Lessons) {
+      const res = await client.query(`
+        INSERT INTO lessons (course_id, title, content, key_takeaway, order_index, reading_time_minutes)
+        VALUES ($1, $2, $3, $4, $5, $6)
+        ON CONFLICT (course_id, title) DO UPDATE SET
+          content = EXCLUDED.content,
+          key_takeaway = EXCLUDED.key_takeaway,
+          order_index = EXCLUDED.order_index,
+          reading_time_minutes = EXCLUDED.reading_time_minutes
+        RETURNING id
+      `, [c4, lesson.title, lesson.content, lesson.key_takeaway, lesson.order_index, lesson.reading_time_minutes]);
+      await client.query(`
+        INSERT INTO quizzes (lesson_id, title, passing_score) VALUES ($1, $2, 70)
+        ON CONFLICT (lesson_id) DO UPDATE SET title = EXCLUDED.title
+      `, [res.rows[0].id, `Quiz: ${lesson.title}`]);
+    }
+
+    const c4QuizResults = await client.query(`
+      SELECT q.id FROM quizzes q
+      JOIN lessons l ON q.lesson_id = l.id
+      WHERE l.course_id = $1 ORDER BY l.order_index
+    `, [c4]);
+
+    const c4Questions = [
+      [
+        { question: "A dog who sits perfectly at home but ignores 'sit' at the park is experiencing:", options: ["Stubbornness", "Context-specific learning / failure to generalize", "Dominance", "Forgetfulness"], correct: 1, explanation: "Dogs are context-specific learners. A behavior learned in one environment doesn't automatically transfer to others — it must be deliberately practiced in each new context." },
+        { question: "When introducing a behavior in a new environment, you should:", options: ["Keep criteria the same as at home", "Temporarily lower criteria and use higher-value rewards", "Use corrections to enforce the known behavior", "Practice longer sessions to overcome the distraction"], correct: 1, explanation: "In new environments, temporarily lower your criteria — ask for easier behaviors — and use higher-value rewards to compete with the increased distraction level." },
+        { question: "The correct order for adding the 3 D's when proofing a behavior is:", options: ["Add all three simultaneously for efficiency", "Distraction → Distance → Duration", "Add one D at a time, never more", "Duration → Distance → Distraction, always in that order"], correct: 2, explanation: "Add only one variable at a time — never distance and distraction together. This lets you know exactly what is causing any breakdown and set the dog up for success." },
+      ],
+      [
+        { question: "In a multi-dog household, dogs should be fed:", options: ["Together so they learn to share", "Separately to prevent food guarding and conflict", "In a hierarchy with the dominant dog first", "On a random schedule to reduce resource guarding"], correct: 1, explanation: "Feeding dogs separately removes the primary trigger for food-related conflict. Dogs don't naturally share resources — management prevents problems from developing." },
+        { question: "Before training dogs together as a group, each dog should:", options: ["Know at least 10 commands", "Be reliable with each behavior individually (about 90% success rate)", "Have lived together for at least 6 months", "Be the same age and breed"], correct: 1, explanation: "Each dog must first learn behaviors independently before group training. Otherwise, one dog will cue the other and you won't know if each truly understands the behavior." },
+        { question: "When introducing a new dog to the household, the best first meeting location is:", options: ["At home so the existing dog feels comfortable", "Neutral ground, on leash, walking in parallel", "A dog park where they can run freely together", "Separate rooms at first, never meeting for weeks"], correct: 1, explanation: "Neutral ground prevents the existing dog from feeling territorial. Walking in parallel allows them to acclimate to each other's presence without the pressure of a face-to-face greeting." },
+      ],
+      [
+        { question: "A dog who is 'over threshold' is:", options: ["Very relaxed and easy to train", "Too aroused or anxious to respond to training", "Extremely food motivated", "Fully generalized in their training"], correct: 1, explanation: "Over threshold means the dog's arousal or anxiety level has exceeded their ability to think and respond — instinct takes over. Training at this point is ineffective and potentially counterproductive." },
+        { question: "The 'Look at That' (LAT) technique works by:", options: ["Teaching dogs to ignore distractions completely", "Rewarding the dog for noticing a distraction, changing their emotional response to it", "Punishing the dog for looking at triggers", "Using the distraction as a reward"], correct: 1, explanation: "LAT marks and rewards the dog FOR noticing the distraction, which changes the emotional association. The distraction becomes a cue to look at you for a reward rather than something to react to." },
+        { question: "The best way to start distraction training is:", options: ["At the highest distraction level to build resilience quickly", "At a low-level distraction and work up systematically", "Only after the dog has been trained for 2+ years", "In the same environment where you normally train"], correct: 1, explanation: "Always start at a distraction level the dog can handle — well below threshold — and work up systematically. Jumping to high-level distractions before the dog is ready sets them up to fail." },
+      ],
+      [
+        { question: "The difference between an 'obedient' dog and a 'confident' dog is:", options: ["Obedient dogs know more commands", "Confident dogs are emotionally resilient and reliable under pressure; obedient dogs may know commands but fall apart in challenging situations", "There is no difference", "Confident dogs don't need commands"], correct: 1, explanation: "Obedience training teaches commands. Confidence training builds the emotional resilience that makes those commands reliable in any situation. Both are needed for a truly well-trained dog." },
+        { question: "Why is the human-dog relationship described as 'the foundation' of training?", options: ["Because dogs will only work for owners they love", "Because a dog who trusts you and enjoys working with you will be more forgiving of training mistakes and more motivated to engage", "Because dominant owners get better results", "It isn't — technique is more important than relationship"], correct: 1, explanation: "A strong relationship means the dog is intrinsically motivated to work with you, recovers faster from confusing training moments, and finds your presence itself rewarding — all of which accelerate learning." },
+        { question: "Maintenance training means:", options: ["Repeating the same training program from the beginning annually", "Continuing to practice known behaviors in new contexts throughout the dog's life", "Only training when the dog shows regression", "Training for 30 minutes every day without fail"], correct: 1, explanation: "Behaviors that aren't practiced fade, especially under real-world pressure. Regular maintenance — brief tune-up sessions, surprise recall rewards, new environments — keeps skills sharp and the dog engaged." },
+      ],
+    ];
+
+    for (let i = 0; i < c4QuizResults.rows.length && i < c4Questions.length; i++) {
+      const quizId = c4QuizResults.rows[i].id;
+      for (let j = 0; j < c4Questions[i].length; j++) {
+        const q = c4Questions[i][j];
+        await client.query(`
+          INSERT INTO quiz_questions (quiz_id, question, options, correct_answer, explanation, order_index)
+          VALUES ($1, $2, $3, $4, $5, $6)
+          ON CONFLICT (quiz_id, order_index) DO UPDATE SET
+            question = EXCLUDED.question,
+            options = EXCLUDED.options,
+            correct_answer = EXCLUDED.correct_answer,
+            explanation = EXCLUDED.explanation
+        `, [quizId, q.question, JSON.stringify(q.options), q.correct, q.explanation, j]);
+      }
+    }
+    console.log('✅ Course 4 seeded');
+
     // ─── Scenarios ────────────────────────────────────────────────────────────
     const scenarios = [
       { name: 'Mealtime', description: 'Keep your dog calm and mannerly while you eat', icon: '🍽️', color: 'orange', category: 'daily', order_index: 1 },
