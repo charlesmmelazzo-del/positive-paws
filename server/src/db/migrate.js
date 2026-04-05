@@ -201,7 +201,7 @@ const migrate = async () => {
       )
     `);
     await client.query(`
-      ALTER TABLE courses ADD CONSTRAINT IF NOT EXISTS courses_title_booksource_key UNIQUE (title, book_source)
+      CREATE UNIQUE INDEX IF NOT EXISTS courses_title_booksource_idx ON courses(title, book_source)
     `);
 
     // Remove duplicate lessons (cascade from course dedup may have already cleaned some)
@@ -211,7 +211,7 @@ const migrate = async () => {
       )
     `);
     await client.query(`
-      ALTER TABLE lessons ADD CONSTRAINT IF NOT EXISTS lessons_course_title_key UNIQUE (course_id, title)
+      CREATE UNIQUE INDEX IF NOT EXISTS lessons_course_title_idx ON lessons(course_id, title)
     `);
 
     // Remove duplicate quizzes (one per lesson)
@@ -221,7 +221,7 @@ const migrate = async () => {
       )
     `);
     await client.query(`
-      ALTER TABLE quizzes ADD CONSTRAINT IF NOT EXISTS quizzes_lesson_id_key UNIQUE (lesson_id)
+      CREATE UNIQUE INDEX IF NOT EXISTS quizzes_lesson_id_idx ON quizzes(lesson_id)
     `);
 
     // Remove duplicate quiz questions (one per quiz+order_index)
@@ -231,7 +231,7 @@ const migrate = async () => {
       )
     `);
     await client.query(`
-      ALTER TABLE quiz_questions ADD CONSTRAINT IF NOT EXISTS quiz_questions_quiz_order_key UNIQUE (quiz_id, order_index)
+      CREATE UNIQUE INDEX IF NOT EXISTS quiz_questions_quiz_order_idx ON quiz_questions(quiz_id, order_index)
     `);
 
     await client.query('COMMIT');
